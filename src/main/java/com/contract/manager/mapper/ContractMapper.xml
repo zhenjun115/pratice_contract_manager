@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//com.order.test.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.contract.manager.mapper.ContractMapper">
+
+    <select id="selectAll" resultType="com.contract.manager.model.ContractBean">
+        select * from contract
+    </select>
+    
+</mapper>
