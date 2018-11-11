@@ -44,6 +44,9 @@ public class AuthService implements UserDetailsService {
         // System.out.println( password );
 
         User user = userMapper.selectOne( username );
+        if( user == null ) {
+            throw new UsernameNotFoundException( "用户不存在" );
+        }
         // System.out.println( "username: " + username );
         //根据查找到的用户信息判断用户是否被冻结
         return new User( user.getUsername(),user.getPassword(),

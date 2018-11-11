@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//com.order.test.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.contract.manager.mapper.UserMapper">
 
-    <select id="selectOne" resultType="com.contract.manager.model.User">
+    <select id="selectOne" parameterType="java.lang.String" resultType="com.contract.manager.model.User">
         select username as userName, userpwd as password from userinfo where username = #{username}
     </select>
     

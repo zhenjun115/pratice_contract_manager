@@ -141,7 +141,7 @@ class RestfulAuthenticationSuccessHandler implements AuthenticationSuccessHandle
   public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                       Authentication authentication) throws IOException, ServletException {
       response.setHeader("Content-Type", "application/json;charset=utf-8");
-      response.getWriter().print("{\"code\":0,\"message\":\"success\"}");
+      response.getWriter().print("{\"code\":0,\"status\":\"ok\", \"message\":\"success\"}");
       response.getWriter().flush();
   }
 }
@@ -152,7 +152,7 @@ class RestfulAuthenticationFailureHandler implements AuthenticationFailureHandle
   public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
                                       AuthenticationException exception) throws IOException, ServletException {
       response.setHeader("Content-Type", "application/json;charset=utf-8");
-      response.getWriter().print("{\"code\":1,\"message\":\""+exception.getMessage()+"\"}");
+      response.getWriter().print("{\"code\":1,\"status\":\"error\", \"message\":\""+exception.getMessage()+"\"}");
       response.getWriter().flush();
   }
 }
