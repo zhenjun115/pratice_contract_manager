@@ -9,6 +9,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.contract.manager.filter.JsonAuthenticationFilter;
 import com.contract.manager.filter.TokenAuthorizationFilter;
 import com.contract.manager.service.AuthService;
 import com.contract.manager.util.JwtTokenUtil;
@@ -17,6 +18,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -33,6 +35,7 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsUtils;
 
 @Configuration
 // @EnableWebMvcSecurity
@@ -49,6 +52,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
   @Autowired
   private TokenAuthorizationFilter tokenAuthorizationFilter;
 
+  // @Autowired
+  // private JsonAuthenticationFilter jsonAuthenticationFilter;
+
   @Override
   protected void configure(AuthenticationManagerBuilder auth) throws Exception {
     auth.userDetailsService( authService ).passwordEncoder( new BCryptPasswordEncoder() );
@@ -63,18 +69,19 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
       .accessDeniedHandler( new RestfulAccessDeniedHandler() )
       .authenticationEntryPoint( new RestfulAuthenticationEntryPoint() );
 
+    http.cors().and().csrf().disable();
+
     http.authorizeRequests()
-      .antMatchers("/", "/home")
-        .permitAll()
-      .anyRequest()
-        .authenticated()
+      .antMatchers("/", "/home").permitAll()
+      .anyRequest().authenticated()
+      .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
       .and()
         .formLogin()
         .loginProcessingUrl("/login")
         //.successHandler( new RestfulAuthenticationSuccessHandler() )
-        .successHandler( new SuccessHandler( new JwtTokenUtil() ) )
-        .failureHandler( new RestfulAuthenticationFailureHandler() )
-        .permitAll()// .usernameParameter( usernameParameter ).passwordParameter( passwordParameter )
+        // .successHandler( new SuccessHandler( new JwtTokenUtil() ) )
+        // .failureHandler( new RestfulAuthenticationFailureHandler() )
+        .permitAll() // .usernameParameter( usernameParameter ).passwordParameter( passwordParameter )
       .and()
         .logout()
         .logoutUrl(logout)
@@ -82,8 +89,29 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
       .and()
         .sessionManagement().sessionCreationPolicy(STATELESS)
       .and()
-        .addFilterBefore(tokenAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
+        .addFilterBefore( tokenAuthorizationFilter, UsernamePasswordAuthenticationFilter.class )
+        .addFilterAt( jsonAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class );
+      /*.and()
+        .cors();*/
+      /* .and()
+        .csrf().disable(); */
+      
   }
+
+  @Bean
+  JsonAuthenticationFilter jsonAuthenticationFilter() throws Exception {
+    JsonAuthenticationFilter filter = new JsonAuthenticationFilter();
+    // filter.setAuthenticationSuccessHandler(new SuccessHandler());
+    // filter.setAuthenticationFailureHandler(new FailureHandler());
+    // filter.setFilterProcessesUrl("/login/self");
+    filter.setAuthenticationManager( super.authenticationManagerBean() );
+    filter.setAuthenticationSuccessHandler( new SuccessHandler( new JwtTokenUtil() ) );
+    filter.setAuthenticationFailureHandler( new RestfulAuthenticationFailureHandler() );
+
+    //这句很关键，重用WebSecurityConfigurerAdapter配置的AuthenticationManager，不然要自己组装AuthenticationManager
+    filter.setAuthenticationManager(super.authenticationManagerBean());
+    return filter;
+}
 }
 
 class RestfulAccessDeniedHandler implements AccessDeniedHandler {

@@ -2,8 +2,6 @@ package com.contract.manager.controller;
 
 import java.io.IOException;
 
-import javax.websocket.server.PathParam;
-
 import com.contract.manager.model.Msg;
 import com.contract.manager.service.AuthService;
 
