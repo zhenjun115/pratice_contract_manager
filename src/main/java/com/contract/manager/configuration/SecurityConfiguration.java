@@ -152,7 +152,9 @@ class SuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
 
       try (Writer writer = response.getWriter()){
           JsonNode jsonNode = jsonNodeFactory.objectNode()
-                  .put("token",tokenUtils.generateToken(authentication));
+                  .put("token",tokenUtils.generateToken(authentication))
+                  .put("roles","user")
+                  .put("status", "ok" );
           objectMapper.writeValue(writer,jsonNode);
       }catch (Exception e){
           e.printStackTrace();
