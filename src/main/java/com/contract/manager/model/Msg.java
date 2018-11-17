@@ -5,6 +5,8 @@ public class Msg
   private int code;
   private String content;
 
+  private Object payload; //其他数据
+
   public Msg() {
   }
 
@@ -27,5 +29,13 @@ public class Msg
 
   public String getContent() {
     return this.content;
+  }
+
+  public void setPayload( Object payload ) {
+    this.payload = payload;
+  }
+
+  public Object getPayload() {
+    return this.payload;
   }
 }

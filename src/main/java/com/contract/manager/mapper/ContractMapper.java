@@ -1,16 +1,20 @@
 package com.contract.manager.mapper;
 
 import java.util.List;
-// import org.apache.ibatis.annotations.Select;
-// import org.apache.ibatis.annotations.Repository;
-import com.contract.manager.model.*;
+
+import com.contract.manager.model.Contract;
 
 import org.apache.ibatis.annotations.Mapper;
 
-// @Repository
 @Mapper
 public interface ContractMapper {
 
   //@Select( "select * from contract" )
-  List<ContractBean> selectAll();
+  List<Contract> selectAll();
+
+  long createDraft( Contract contract );
+
+  Contract fetchDraft( Contract contract );
+
+  long saveDraft( Contract contract );
 }

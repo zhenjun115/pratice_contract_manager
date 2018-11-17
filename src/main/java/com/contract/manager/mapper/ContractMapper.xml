@@ -2,8 +2,21 @@
 <!DOCTYPE mapper PUBLIC "-//com.order.test.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.contract.manager.mapper.ContractMapper">
 
-    <select id="selectAll" resultType="com.contract.manager.model.ContractBean">
+    <select id="selectAll" resultType="com.contract.manager.model.Contract">
         select * from contract
     </select>
     
+    <!-- 根据合同模版编号创建合同草稿 -->
+    <insert id="createDraft" parameterType="com.contract.manager.model.Contract" resultType="java.lang.Long">
+        insert into contract( contractid, templateid ) values ( #{contractId}, #{templateId} )
+    </insert>
+
+    <!-- 根据合同模版编号读取合同草稿 -->
+    <select id="fetchDraft" parameterType="com.contract.manager.model.Contract" resultType="com.contract.manager.model.Contract">
+        select * from contract where isDraft = 1
+    </select>
+
+    <update id="saveDraft" parameterType="com.contract.manager.model.Contract" resultType="java.lang.Long">
+        update contract set 
+    </update>
 </mapper>
