@@ -14,6 +14,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -72,6 +73,8 @@ public class JwtTokenUtil {
             return false;
         try {
             JWT.require(algorithm).build().verify(token);
+            // 获取单点用户登录信息
+            // System.out.println( JWT.decode(token).getSubject() );
             return true;
         } catch (JWTVerificationException e) {
             return false;
@@ -99,5 +102,29 @@ public class JwtTokenUtil {
         User principal = new User(decodedJWT.getSubject(), "", authorities);
 
         return new UsernamePasswordAuthenticationToken(principal, "", authorities);
+    }
+
+    /**
+     * 从header中解析出userName
+     *
+     */
+    public static String getAuthenticationUser(HttpHeaders headers) {
+        // 获取单点用户token
+        String token = headers.get( "authorization" ).get( 0 );
+        // 获取token关联的用户登录名称
+        String userName = JWT.decode( token.substring(7) ).getSubject();
+
+        return userName;
+    }
+
+    /**
+     * 从token中解析出userName
+     *
+     */
+    public static String getAuthenticationUser(String token) {
+        // 获取token关联的用户登录名称
+        String userName = JWT.decode( token.substring(7) ).getSubject();
+
+        return userName;
     }
 }

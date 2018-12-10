@@ -26,7 +26,6 @@ repositories {
 	mavenCentral()
 }
 
-
 dependencies {
 	implementation('org.springframework.boot:spring-boot-starter-actuator')
 	implementation('org.springframework.boot:spring-boot-starter-mail')
@@ -43,11 +42,13 @@ dependencies {
 
 	compile 'com.auth0:java-jwt:3.4.1'
 	// https://mvnrepository.com/artifact/com.jayway.jsonpath/json-path
+	// https://mvnrepository.com/artifact/org.activiti/activiti-spring-boot-starter-basic
+	compile 'org.activiti:activiti-spring-boot-starter-basic:6.0.0'
 	compile 'com.jayway.jsonpath:json-path:2.4.0'
 	runtimeOnly('org.springframework.boot:spring-boot-devtools')
 	runtimeOnly('mysql:mysql-connector-java')
-	testImplementation('org.springframework.boot:spring-boot-starter-test')
-	testImplementation('org.springframework.security:spring-security-test')
+	testImplementation('org.springframework.boot:spring-boot-starter-mybatis')
+	testImplementation('org.springframework.security:spring-security-mybatis')
 }
 
 processResources {

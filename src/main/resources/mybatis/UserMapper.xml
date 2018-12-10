@@ -5,5 +5,13 @@
     <select id="selectOne" parameterType="java.lang.String" resultType="com.contract.manager.model.User">
         select username as userName, userpwd as password from userinfo where username = #{username}
     </select>
+
+    <select id="fetchByUserName" parameterType="com.contract.manager.model.User" resultType="com.contract.manager.model.User" >
+        select * from userinfo where username = #{username}
+    </select>
+
+    <update id="update" parameterType="com.contract.manager.model.User">
+        update userinfo set email = #{email} where username = #{userName}
+    </update>
     
 </mapper>

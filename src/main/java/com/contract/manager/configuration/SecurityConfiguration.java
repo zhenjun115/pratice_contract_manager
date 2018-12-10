@@ -38,7 +38,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsUtils;
 
 @Configuration
-// @EnableWebMvcSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
   private String usernameParameter = "username";
@@ -72,7 +71,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     http.cors().and().csrf().disable();
 
     http.authorizeRequests()
-      .antMatchers("/", "/home").permitAll()
+      .antMatchers("/workflow/**" ).permitAll()
       .anyRequest().authenticated()
       .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
       .and()
@@ -111,7 +110,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     //这句很关键，重用WebSecurityConfigurerAdapter配置的AuthenticationManager，不然要自己组装AuthenticationManager
     filter.setAuthenticationManager(super.authenticationManagerBean());
     return filter;
-}
+  }
 }
 
 class RestfulAccessDeniedHandler implements AccessDeniedHandler {
@@ -178,6 +177,7 @@ class SuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
       response.setStatus(HttpStatus.OK.value());
       response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
 
+      System.out.println( authentication.getAuthorities() );
       try (Writer writer = response.getWriter()){
           JsonNode jsonNode = jsonNodeFactory.objectNode()
                   .put("token",tokenUtils.generateToken(authentication))

@@ -5,10 +5,15 @@
     <select id="selectAll" resultType="com.contract.manager.model.Contract">
         select * from contract
     </select>
+
+    <!-- 获取合同信息 -->
+    <select id="fetch" parameterType="com.contract.manager.model.Contract" resultType="com.contract.manager.model.Contract">
+        select * from contract where contractid = #{contractId}
+    </select>
     
     <!-- 根据合同模版编号创建合同草稿 -->
-    <insert id="createDraft" parameterType="com.contract.manager.model.Contract" resultType="java.lang.Long">
-        insert into contract( contractid, templateid ) values ( #{contractId}, #{templateId} )
+    <insert id="createDraft" parameterType="com.contract.manager.model.Contract">
+        insert into contract( contractid, templateid, isDraft ) values ( #{contractId}, #{templateId}, '1' )
     </insert>
 
     <!-- 根据合同模版编号读取合同草稿 -->
@@ -16,7 +21,7 @@
         select * from contract where isDraft = 1
     </select>
 
-    <update id="saveDraft" parameterType="com.contract.manager.model.Contract" resultType="java.lang.Long">
-        update contract set 
+    <update id="saveDraft" parameterType="com.contract.manager.model.Contract">
+        update contract set templateId = #{templateId} where contractId = #{contractId}
     </update>
 </mapper>

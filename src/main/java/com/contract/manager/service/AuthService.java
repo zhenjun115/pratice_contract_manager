@@ -15,10 +15,7 @@ import org.springframework.stereotype.Service;
 
 @Service( "authService" )
 public class AuthService implements UserDetailsService {
-
-//    @Autowired
-//    private //在这里注入mapper，再想ia面根据用户名做信息查找
-
+    
     /**
      * 重写PasswordEncoder  接口中的方法，实例化加密策略
      * @return 返回 BCrypt 加密策略

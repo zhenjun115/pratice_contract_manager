@@ -22,7 +22,6 @@ public class JsonAuthenticationFilter extends UsernamePasswordAuthenticationFilt
   public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
       UsernamePasswordAuthenticationToken authRequest;
       try (InputStream is = request.getInputStream()) {
-          // 使用JsonPath读取JSON请求，你也可以换成你喜欢的库
           DocumentContext context = JsonPath.parse(is);
           String username = context.read("userName", String.class);
           String password = context.read("password", String.class);

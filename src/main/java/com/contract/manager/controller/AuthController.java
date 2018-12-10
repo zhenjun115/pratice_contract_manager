@@ -31,8 +31,8 @@ public class AuthController {
    * 当需要身份认证时 跳转到这里
    */
   @RequestMapping("/auth/user")
-  public Msg auth( @RequestParam String username, @RequestParam String password ) throws IOException {
+  public Msg auth( @RequestParam String useruid ) throws IOException {
       //如果不是，返回一个json 字符串
-      return new Msg( 400, "fail: " + username );
+      return new Msg( 400, "fail: " );
   }
 }

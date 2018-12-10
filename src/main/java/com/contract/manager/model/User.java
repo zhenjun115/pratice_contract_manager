@@ -8,68 +8,112 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 public class User implements UserDetails {
 
-  private String userName;
-  private String password;
+	private String userName;
+	private String password;
+	private String location;
+	private String position;
+	private String email;
+	private String userid;
 
-  public User( String userName, String password ) {
-    this.userName = userName;
-    this.password = password;
-  }
+	public User() {
 
-  public User(String username, String password, boolean isAccountNonExpired, boolean isAccountNonLocked, boolean isCredentialsNonExpired, boolean isEnabled,
-			List<GrantedAuthority> commaSeparatedStringToAuthorityList) {
-        this.userName = username;
-        this.password = password;
 	}
 
-  @Override
-  public Collection<? extends GrantedAuthority> getAuthorities() {
-    return null;
-  }
+	public User(String userName, String password) {
+		this.userName = userName;
+		this.password = password;
+	}
 
-  @Override
-  public String getPassword() {
-    return this.password;
-  }
+	public User(String username, String password, boolean isAccountNonExpired, boolean isAccountNonLocked,
+			boolean isCredentialsNonExpired, boolean isEnabled,
+			List<GrantedAuthority> commaSeparatedStringToAuthorityList) {
+		this.userName = username;
+		this.password = password;
+	}
 
-  
-  /**
-   * @param password the password to set
-   */
-  public void setPassword(String password) {
-    this.password = password;
-  }
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return null;
+	}
 
-  @Override
-  public String getUsername() {
-    return this.userName;
-  }
+	@Override
+	public String getPassword() {
+		return this.password;
+	}
 
-  /**
-   * @param userName the userName to set
-   */
-  public void setUserName(String userName) {
-    this.userName = userName;
-  }
+	/**
+	 * @param password the password to set
+	 */
+	public void setPassword(String password) {
+		this.password = password;
+	}
 
-  @Override
-  public boolean isAccountNonExpired() {
-    return true;
-  }
+	@Override
+	public String getUsername() {
+		return this.userName;
+	}
 
-  @Override
-  public boolean isAccountNonLocked() {
-    return true;
-  }
+	/**
+	 * @param userName the userName to set
+	 */
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
 
-  @Override
-  public boolean isCredentialsNonExpired() {
-    return true;
-  }
+	@Override
+	public boolean isAccountNonExpired() {
+		return true;
+	}
 
-  @Override
+	@Override
+	public boolean isAccountNonLocked() {
+		return true;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return true;
+	}
+
+	@Override
 	public boolean isEnabled() {
 		return true;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
+	}
+
+	public String getPosition() {
+		return position;
+	}
+
+	public void setPosition(String position) {
+		this.position = position;
+	}
+
+	public String getUserid() {
+		return userid;
+	}
+
+	public void setUserid(String userid) {
+		this.userid = userid;
+	}
+
+	public String getUserName() {
+		return userName;
 	}
 
 }

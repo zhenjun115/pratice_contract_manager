@@ -18,6 +18,10 @@ public class ContractService
     return contractMapper.selectAll();
   }
 
+  public Contract fetch( Contract contract ) {
+    return contractMapper.fetch( contract );
+  }
+
   public boolean createDraft( Contract contract ) {
     long createdCount = contractMapper.createDraft( contract );
     if( createdCount == 1 ) {

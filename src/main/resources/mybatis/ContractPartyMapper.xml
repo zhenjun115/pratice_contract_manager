@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//com.order.test.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.contract.manager.mapper.ContractPartyMapper">
+
+    <!-- 保存合同相关的签约主体信息 -->
+    <!-- TODO: 添加验证 -->
+    <update id="saveParty" parameterType="com.contract.manager.model.ContractParty">
+        <selectKey keyProperty="count" order="BEFORE" resultType="int">
+            select count( contractId ) as count from contract_party where contractid = #{contractId} and type = #{type}
+        </selectKey>
+
+        <!-- 如果大于0则更新 -->
+        <if test="count > 0">
+            update
+                contract_party
+            set
+                name = #{name},
+                address = #{address},
+                phone = #{phone}
+            where
+                contractId = #{contractId} and type = #{type}
+        </if>
+
+        <!-- 如果等于0则保存 -->
+        <if test="count == 0">
+        insert into contract_party(contractId,name,address,phone,type) values( #{contractId}, #{name}, #{address}, #{phone},#{type} )
+        </if>
+    </update>
+
+    <select id="fetchParty" parameterType="com.contract.manager.model.ContractParty" resultType="com.contract.manager.model.ContractParty">
+        select * from contract_party where contractid = #{contractId} and type = #{type}
+    </select>
+</mapper>

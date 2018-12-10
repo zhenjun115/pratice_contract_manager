@@ -7,4 +7,6 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface UserMapper {
   User selectOne( String username );
+  User fetchByUserName( User user );
+  boolean update( User user );
 }

@@ -28,8 +28,6 @@ public class TokenAuthorizationFilter extends GenericFilterBean {
 
   @Override
   public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-      HttpServletRequest servletRequest = (HttpServletRequest) request;
-
       String token = resolveToken((HttpServletRequest) request);
 
       if(tokenUtils.validateToken(token)){
@@ -38,11 +36,10 @@ public class TokenAuthorizationFilter extends GenericFilterBean {
       }
       chain.doFilter(request, response);
 
-      cleanAuthentication();
+      // cleanAuthentication();
   }
 
   /**
-   * ?????????????????????token
    * @param request
    * @return token
    */
@@ -54,6 +51,9 @@ public class TokenAuthorizationFilter extends GenericFilterBean {
           return token.substring(7);
   }
 
+  /**
+   * 取消单点登录授权
+   */
   private void cleanAuthentication(){
       SecurityContextHolder.getContext().setAuthentication(null);
   }
