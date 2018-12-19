@@ -9,4 +9,6 @@ import com.contract.manager.model.ContractTemplate;
 @Mapper
 public interface ContractTemplateMapper {
 	List<ContractTemplate> fetch( List<String> catCodes );
+
+	ContractTemplate fetchByTemplateId(String templateId);
 }

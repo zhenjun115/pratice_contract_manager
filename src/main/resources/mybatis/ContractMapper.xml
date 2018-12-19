@@ -13,7 +13,7 @@
     
     <!-- 根据合同模版编号创建合同草稿 -->
     <insert id="createDraft" parameterType="com.contract.manager.model.Contract">
-        insert into contract( contractid, templateid, isDraft ) values ( #{contractId}, #{templateId}, '1' )
+        insert into contract( contractid, conname, description, templateid, isDraft ) values ( #{contractId}, #{conname}, #{description}, #{templateId}, '1' )
     </insert>
 
     <!-- 根据合同模版编号读取合同草稿 -->
@@ -24,4 +24,8 @@
     <update id="saveDraft" parameterType="com.contract.manager.model.Contract">
         update contract set templateId = #{templateId} where contractId = #{contractId}
     </update>
+
+    <insert id="save" parameterType="java.util.HashMap">
+        insert into contract( contractid, conname, templateid ) values ( #{contractId}, #{contractName}, #{templateId} )
+    </insert>
 </mapper>

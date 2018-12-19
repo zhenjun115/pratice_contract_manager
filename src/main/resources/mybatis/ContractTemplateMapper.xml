@@ -4,9 +4,16 @@
 
 	<!-- 根据模版代号获取模版 -->
     <select id="fetch" parameterType="java.util.List" resultType="com.contract.manager.model.ContractTemplate">
-        select * from contract_template where cat_code in
-        <foreach collection="list" item="catCode" index="index" open="(" close=")" separator=",">
-        #{catCode}
-        </foreach>
+        select * from contract_template
+        <if test="list != null">
+            where cat_code in
+            <foreach collection="list" item="catCode" index="index" open="(" close=")" separator=",">
+                #{catCode}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="fetchByTemplateId" parameterType="com.contract.manager.model.ContractTemplate" resultType="com.contract.manager.model.ContractTemplate">
+        select * from contract_template where templateId = #{templateId}
     </select>
 </mapper>

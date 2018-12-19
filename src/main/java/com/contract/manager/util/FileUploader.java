@@ -3,6 +3,8 @@ package com.contract.manager.util;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.contract.manager.model.Msg;
 
@@ -18,8 +20,12 @@ public class FileUploader
       byte[] bytes = file.getBytes();
       Path path = Paths.get( UPLOADED_FOLDER + file.getOriginalFilename() );
       Files.write(path, bytes );
+      Map<String,Object> result = new HashMap<String,Object>();
+      result.put( "filePath", path.getFileName().toString() );
+      result.put( "fileName", file.getOriginalFilename() );
       msg.setCode( 200 );
       msg.setContent( "上传成功" );
+      msg.setPayload( result );
     } catch (Exception e) {
       msg.setCode( 400 );
       msg.setContent( "上传失败" );

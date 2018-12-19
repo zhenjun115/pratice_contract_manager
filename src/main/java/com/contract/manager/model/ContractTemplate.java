@@ -8,6 +8,7 @@ public class ContractTemplate {
     private String created_time;
     private String last_modified_time;
     private String templateId;
+    private String fileName;
 
     public String getTitle() {
         return title;
@@ -55,5 +56,13 @@ public class ContractTemplate {
 
     public void setTemplateId(String templateId) {
         this.templateId = templateId;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 }

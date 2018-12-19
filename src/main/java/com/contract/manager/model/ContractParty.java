@@ -8,6 +8,7 @@ public class ContractParty
   private String role;
   private String address;
   private String phone;
+  private String idNumber;
   private int count;
 
   public String getContractId() {
@@ -64,5 +65,13 @@ public class ContractParty
 
   public void setCount(int count) {
     this.count = count;
+  }
+
+  public String getIdNumber() {
+    return idNumber;
+  }
+
+  public void setIdNumber(String idNumber) {
+    this.idNumber = idNumber;
   }
 }

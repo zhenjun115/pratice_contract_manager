@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//com.order.test.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.contract.manager.mapper.ContractFileMapper">
+
+    <insert id="addFile" parameterType="com.contract.manager.model.ContractFile">
+        insert into contract_file( contractid, filename, filepath, filecat ) values ( #{contractId}, #{fileName}, #{filePath}, #{fileCat} )
+    </insert>
+
+    <select id="fetchFiles" parameterType="com.contract.manager.model.Contract" resultType="com.contract.manager.model.ContractFile">
+        select * from contract_file where contractid = #{contractId}
+    </select>
+
+    <!-- TODO: 根据文件ID删除文件，且为逻辑删除 -->
+    <delete id="delFile" parameterType="com.contract.manager.model.ContractFile">
+        delete from contract_file where contractId = #{contractId} and fileName = #{fileName}
+    </delete>
+</mapper>

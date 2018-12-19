@@ -1,20 +1,23 @@
 package com.contract.manager.controller;
 
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import com.contract.manager.model.Contract;
+import com.contract.manager.model.ContractFile;
 import com.contract.manager.model.ContractParty;
 import com.contract.manager.model.Msg;
+import com.contract.manager.service.ContractFileService;
 import com.contract.manager.service.ContractPartyService;
 import com.contract.manager.service.ContractService;
 
 import com.contract.manager.service.WorkFlowService;
+import com.contract.manager.util.FileUploader;
 import com.contract.manager.util.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 public class ContractController {
@@ -23,6 +26,9 @@ public class ContractController {
 
     @Autowired
     private ContractPartyService contractPartyService;
+
+    @Autowired
+    private ContractFileService contractFileService;
 
     @Autowired
     private WorkFlowService workFlowService; // 流程服务
@@ -39,9 +45,16 @@ public class ContractController {
      * @return
      */
     @RequestMapping("/contract/draft/create")
-    public @ResponseBody Msg createDraft(@RequestBody @Validated Contract contract) {
+    public @ResponseBody Msg createDraft(@RequestBody Contract contract) {
         //1. 创建草稿
-        contract.setContractId(UUID.randomUUID().toString().replace("-", "")); //使用UUID为合同指定编号
+        String contractId = UUID.randomUUID().toString().replace("-", "");
+        String conname = new Date().toString();
+        String description = conname + "创建的合同";
+        contract.setContractId( contractId ); //使用UUID为合同指定编号
+        contract.setConname( conname );
+        contract.setDescription( description );
+
+        // 2. 保存合同信息
         boolean created = contractService.createDraft(contract);
         //2. 创建草稿失败
         Msg msg = new Msg();
@@ -52,7 +65,7 @@ public class ContractController {
             //3. 创建草稿成功
             msg.setCode(1);
             msg.setContent("success");
-            msg.setPayload(created);
+            msg.setPayload(contract);
         }
 
         return msg;
@@ -67,7 +80,7 @@ public class ContractController {
         String contractId = UUID.randomUUID().toString().replace( "-", "" );
 
         String workFlow = "contract_create_flow";
-        workFlowService.startProcess( workFlow, userName ); //启动劳务合同新建流程
+//        workFlowService.startProcess( workFlow, userName ); //启动劳务合同新建流程
         // workFlowService.completeTask( );
 
         Msg msg = new Msg();
@@ -90,9 +103,9 @@ public class ContractController {
         contract = contractService.fetch( contract );
 
         // 加载劳务合同甲方信息
-        ContractParty partyA = contractPartyService.fetchParty( contract, "partyA" );
+        // ContractParty partyA = contractPartyService.fetchParty( contract, "partyA" );
         // 加载劳务合同乙方信息
-        ContractParty partyB = contractPartyService.fetchParty( contract, "partyB" );
+        // ContractParty partyB = contractPartyService.fetchParty( contract, "partyB" );
 
         // contract.setPartyA( partyA );
         // contract.setPartyB( partyB );
@@ -114,7 +127,7 @@ public class ContractController {
         String userName = JwtTokenUtil.getAuthenticationUser( authorization );
         // 1. 更新合同信息
         // 2. 更新任务信息
-        workFlowService.completeTask( "1", userName );
+//        workFlowService.completeTask( "1", userName );
 
         Msg msg = new Msg();
         msg.setCode( 1 );
@@ -156,11 +169,11 @@ public class ContractController {
      * @return
      */
     @RequestMapping("/contract/party/fetch")
-    public @ResponseBody Msg fetchParty(@RequestBody @Validated Contract contract) {
+    public @ResponseBody Msg fetchParty(@RequestBody Contract contract) {
         //1. 获取甲方
-        ContractParty partyA = contractPartyService.fetchParty(contract, "A");
+        ContractParty partyA = contractPartyService.fetchParty(contract, "partyA");
         //2. 获取乙方
-        ContractParty partyB = contractPartyService.fetchParty(contract, "B");
+        ContractParty partyB = contractPartyService.fetchParty(contract, "partyB");
 
         //3. 返回消息
         contract.setPartyA(partyA);
@@ -201,13 +214,67 @@ public class ContractController {
         return msg;
     }
 
-    @RequestMapping("/contract/files/fetch")
-    public @ResponseBody Msg fetchFiles(@RequestBody @Validated Contract contract) {
+    /**
+     * 获取合同关联的附件
+     * @param contract
+     * @return
+     */
+    @RequestMapping("/contract/files")
+    public @ResponseBody Msg fetchFiles(@RequestBody Contract contract) {
+        List<ContractFile> files = contractFileService.fetchFiles( contract );
         Msg msg = new Msg();
+        msg.setContent( "附件查询成功" );
+        msg.setCode( 1 );
+        msg.setPayload( files );
+
         return msg;
     }
 
-    //TODO: 保存草稿信息和保存合同信息分开
+    /**
+     * 保存合同关联的附件
+     * @param file
+     * @param fileCat
+     * @param contractId
+     * @return
+     */
+    @RequestMapping( "/contract/file/add" )
+    public @ResponseBody Msg addFile(@RequestParam MultipartFile file, @RequestParam String fileCat, @RequestParam String contractId ) {
+        Msg upload = FileUploader.save( file );
+        if( upload.getCode() == 200 ) {
+            Map<String,Object> payload = (HashMap<String, Object>) upload.getPayload();
+
+            ContractFile contractFile = new ContractFile();
+            contractFile.setContractId( contractId );
+            contractFile.setFileName((String) payload.get( "fileName") );
+            contractFile.setFilePath((String) payload.get( "filePath") );
+            contractFile.setFileCat( fileCat );
+
+            contractFileService.addFile( contractFile );
+        }
+
+        Msg msg = new Msg();
+        msg.setCode( 1 );
+        msg.setContent( "上传文件成功" );
+        msg.setPayload( upload );
+
+        return msg;
+    }
+
+    /**
+     * 移除合同关联的附件
+     * @param contractFile
+     * @return
+     */
+    @RequestMapping( "/contract/file/del" )
+    public @ResponseBody Msg deleteFile( @RequestBody ContractFile contractFile ) {
+        boolean deleted = contractFileService.delFile( contractFile );
+        Msg msg = new Msg();
+        msg.setCode( 1 );
+        msg.setContent( "移除成功" );
+        msg.setPayload( deleted );
+
+        return msg;
+    }
 
     /**
      * 基于草稿编号保存合同草稿信息

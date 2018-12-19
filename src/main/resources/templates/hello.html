@@ -1,13 +1,19 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<!--<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"-->
+      <!--xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3" >-->
+<html>
     <head>
         <title>Hello World!</title>
+        <script src="/pageoffice/jquery.min.js" ></script>
+        <script src="/pageoffice/pageoffice.js" id="po_js_main"></script>
     </head>
     <body>
-        <h1 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</h1>
-        <form th:action="@{/logout}" method="post">
-            <input type="submit" value="Sign Out"/>
-        </form>
+        <!--<h1 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</h1>-->
+        <!--<h1 th:text="${msg}">msg</h1>-->
+        <!--<form th:action="@{/logout}" method="post">-->
+            <!--<button onclick="javascript:POBrowser.openWindowModeless('/pageoffice/word', 'width=1200px;height=800px;')">Word</button>-->
+            <!--<input type="submit" value="Sign Out"/>-->
+        <!--</form>-->
+        <button onclick="javascript:POBrowser.openWindowModeless('/pageoffice/template', 'width=1200px;height=800px;')">Word</button>
     </body>
 </html>

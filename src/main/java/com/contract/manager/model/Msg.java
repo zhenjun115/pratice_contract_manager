@@ -19,7 +19,7 @@ public class Msg
     this.code = code;
   }
 
-  public int getCode( int code ) {
+  public int getCode( ) {
     return this.code;
   }
 

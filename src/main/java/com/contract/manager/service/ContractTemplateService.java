@@ -17,4 +17,8 @@ public class ContractTemplateService {
 	public List<ContractTemplate> fetch( List<String> catCodes ) {
 		return contractTemplateMapper.fetch(catCodes);
 	}
+
+    public ContractTemplate fetchByTemplateId(String templateId) {
+		return contractTemplateMapper.fetchByTemplateId( templateId );
+    }
 }

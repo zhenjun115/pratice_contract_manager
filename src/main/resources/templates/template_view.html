@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3" >
+<!--<html>-->
+    <head>
+        <title>Hello World!</title>
+        <script src="/pageoffice/jquery.min.js" ></script>
+        <script src="/pageoffice/pageoffice.js" id="po_js_main"></script>
+        <script>
+            var open = function( templateId ) {
+                // console.log( templateId );
+                POBrowser.openWindowModeless('/pageoffice/template?templateId=' + templateId, 'width=1200px;height=800px;');
+            }
+
+            $( document ).ready( function() {
+                $( "#openTemplate" ).click( function() {
+                    var templateId = $( this ).data( "templateid" );
+                    open( templateId )
+                } );
+            });
+        </script>
+    </head>
+    <body>
+        <button th:data-templateid="${templateId}" id="openTemplate">
+            特性1：预览合同模版
+        </button>
+
+        <div th:utext="${templateId}">模版编号：</div>
+    </body>
+</html>

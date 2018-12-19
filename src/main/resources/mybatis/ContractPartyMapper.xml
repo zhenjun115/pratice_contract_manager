@@ -27,7 +27,7 @@
         </if>
     </update>
 
-    <select id="fetchParty" parameterType="com.contract.manager.model.ContractParty" resultType="com.contract.manager.model.ContractParty">
+    <select id="fetchParty" parameterType="java.util.HashMap" resultType="com.contract.manager.model.ContractParty">
         select * from contract_party where contractid = #{contractId} and type = #{type}
     </select>
 </mapper>

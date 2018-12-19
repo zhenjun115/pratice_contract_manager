@@ -1,6 +1,7 @@
 package com.contract.manager.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import com.contract.manager.model.Contract;
 
@@ -19,4 +20,6 @@ public interface ContractMapper {
   Contract fetchDraft( Contract contract );
 
   long saveDraft( Contract contract );
+
+  long save( Map<String,Object> contact );
 }
