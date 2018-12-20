@@ -8,13 +8,14 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.poi.ooxml.POIXMLProperties;
+import org.apache.poi.util.IOUtils;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
-import org.apache.xmlbeans.impl.soap.Text;
 
 public class POIUtil
 {
@@ -24,14 +25,6 @@ public class POIUtil
             XWPFDocument doc = new XWPFDocument( source );
             // 
             for (XWPFParagraph p : doc.getParagraphs()) {
-                // System.out.println( p.getText() );
-                // String text = p.getText();
-                // for ( Map.Entry<String,String> entry:datas.entrySet() ) {
-                //     if (text != null && text.contains(entry.getKey())) {
-                //         text = text.replace(entry.getKey(), entry.getValue());
-                //         r.setText(text, 0);
-                //     }
-                // }
                 List<XWPFRun> runs = p.getRuns();
                 if (runs != null) {
                     for (XWPFRun r : runs) {
@@ -74,5 +67,24 @@ public class POIUtil
             // TODO Auto-generated catch block
             e.printStackTrace();
 		}
+    }
+
+    public static void generateThumbnailImageFromWord( String fileName, String thumbnailImageDir ) {
+        try {
+            XWPFDocument wordDocument = new XWPFDocument(new FileInputStream( fileName ));
+            POIXMLProperties props = wordDocument.getProperties();
+
+            String thumbnail = props.getThumbnailFilename();
+            if (thumbnail == null) {
+                // No thumbnail 
+            } else {
+                FileOutputStream fos;
+                fos = new FileOutputStream( thumbnailImageDir + "/" + thumbnail );
+                IOUtils.copy(props.getThumbnailImage(), fos);
+            }
+            wordDocument.close();
+        } catch ( Exception exception ) {
+            exception.printStackTrace();
+        }
     }
 }

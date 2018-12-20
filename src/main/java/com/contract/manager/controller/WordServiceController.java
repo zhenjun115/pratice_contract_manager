@@ -1,5 +1,6 @@
 package com.contract.manager.controller;
 
+import com.contract.manager.model.CommonConfig;
 import com.contract.manager.model.Contract;
 import com.contract.manager.model.ContractTemplate;
 import com.contract.manager.model.Msg;
@@ -34,6 +35,9 @@ public class WordServiceController {
 
     @Autowired
     HttpServletRequest httpServletRequest;
+
+    @Autowired
+    CommonConfig commonConfig;
 
     @Autowired
     HttpServletResponse httpServletResponse;
@@ -128,8 +132,12 @@ public class WordServiceController {
         String contractPath = "/Users/zhenjun/Public/contract-restful-springboot/manager/src/main/resources/static/pageoffice/" + contractFileName ;
         File contractFile = CommonUtil.copyFile( templatePath, contractPath );
 
+        // POIUtil.generateThumbnailImageFromWord( contractPath, commonConfig.getContractDir() );
+
+        // System.out.print();
+
         // 3.替换合同文件中的模版
-        Map<String,String> datas = ( HashMap<String,String> ) params.get( "dataTag" );
+        Map<String,String> datas = ( HashMap<String,String> ) params.get( "datas" );
         // TODO: 编码存在问题
         // datas.put( "合同管理系统自动填写-甲方公司名称", "杭州测试公司名称" );
         POIUtil.generateDocWithDatas(datas, new File( contractPath ) );
