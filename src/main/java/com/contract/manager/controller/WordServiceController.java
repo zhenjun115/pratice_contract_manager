@@ -127,9 +127,9 @@ public class WordServiceController {
         // String templateFileName = "test_2.docx";
         String contractFileName = generateContractFileNameWithSuffix( template.getFileName(), contractId );
         // String templatePath = httpServletRequest.getServletContext().getRealPath( "/pageoffice/" + templateFileName );
-        String templatePath = "/Users/zhenjun/Public/contract-restful-springboot/manager/src/main/resources/static/pageoffice/" + templateFileName;
+        String templatePath = commonConfig.getTemplateDir() + templateFileName;
         // String contractPath = httpServletRequest.getServletContext().getRealPath( "/pageoffice/" + contractFileName );
-        String contractPath = "/Users/zhenjun/Public/contract-restful-springboot/manager/src/main/resources/static/pageoffice/" + contractFileName ;
+        String contractPath = commonConfig.getContractDir() + contractFileName ;
         File contractFile = CommonUtil.copyFile( templatePath, contractPath );
 
         // POIUtil.generateThumbnailImageFromWord( contractPath, commonConfig.getContractDir() );

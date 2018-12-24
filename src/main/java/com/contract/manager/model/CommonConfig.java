@@ -12,11 +12,18 @@ public class CommonConfig
     @Value( "${template.dir}" )
     private String templateDir;
 
+    @Value( "${pageoffice.licence}" )
+    private String pageofficeLicenceDir;
+
     public String getContractDir() {
         return this.contractDir;
     }
 
     public String getTemplateDir() {
         return this.templateDir;
+    }
+
+    public String getPageofficeLicenceDir() {
+        return this.pageofficeLicenceDir;
     }
 }
