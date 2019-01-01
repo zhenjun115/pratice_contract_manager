@@ -1,47 +1,55 @@
 package com.contract.manager.controller;
 
 import com.contract.manager.model.Msg;
+import com.contract.manager.model.PurchaseContract;
+import com.contract.manager.model.PurchaseTemplate;
+
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
+
 @RestController
-@RequestMapping( "/purchase" )
+@RequestMapping( "/purchase/contract" )
 public class PurchaseContractController {
 
     /**
-     * 上传采购模版
+     * 上传采购合同
      * @return
      */
-    @RequestMapping("template/add")
-    public Msg addTemplate() {
+    @RequestMapping("add")
+    public Msg add( @RequestBody PurchaseContract contract ) {
         Msg msg = new Msg();
         msg.setCode( 1 );
         msg.setContent( "上传采购模版成功" );
-        msg.setPayload( null );
+        msg.setPayload( contract );
 
         return msg;
     }
 
     /**
-     * 编辑采购模版信息
+     * 获取采购合同
      * @return
      */
-    @RequestMapping("template/edit")
-    public Msg editTemplate() {
+    @RequestMapping("fetch")
+    public Msg fetch(@RequestBody PurchaseContract contract) {
         Msg msg = new Msg();
         msg.setCode( 1 );
-        msg.setContent( "编辑采购模版成功" );
-        msg.setPayload( null );
+        msg.setContent( "获取采购模版成功" );
+        msg.setPayload( contract );
 
         return msg;
     }
 
     /**
-     * 获取采购模版
+     * 获取采购合同
      * @return
      */
-    @RequestMapping("template/fetch")
-    public Msg fetchTemplate() {
+    @RequestMapping("fetchById")
+    public Msg fetchById(@RequestBody HashMap<String,Object> params) {
+        String contractId = (String)params.get( "contractId" );
+
         Msg msg = new Msg();
         msg.setCode( 1 );
         msg.setContent( "获取采购模版成功" );
@@ -50,11 +58,11 @@ public class PurchaseContractController {
     }
 
     /**
-     * 删除采购模版
+     * 删除采购合同
      * @return
      */
-    @RequestMapping("template/delete")
-    public Msg deleteTemplate() {
+    @RequestMapping("delete")
+    public Msg delete() {
         Msg msg = new Msg();
         msg.setCode( 1 );
         msg.setContent( "删除采购模版成功" );

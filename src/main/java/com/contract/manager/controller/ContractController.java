@@ -13,6 +13,7 @@ import com.contract.manager.service.ContractService;
 import com.contract.manager.service.WorkFlowService;
 import com.contract.manager.util.FileUploader;
 import com.contract.manager.util.JwtTokenUtil;
+import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.validation.annotation.Validated;
@@ -304,6 +305,24 @@ public class ContractController {
             msg.setPayload(false);
         }
         //5. 保存草稿失败
+        return msg;
+    }
+
+    /**
+     * 获取所有合同
+     * @param contract
+     * @return
+     */
+    @RequestMapping( "/contract/fetch/all" )
+    public @ResponseBody Msg fetchAll( @RequestBody Contract contract ) {
+        PageHelper.startPage(1, 5 );
+        List<Contract> contracts = contractService.queryAll( contract );
+
+        Msg msg = new Msg();
+        msg.setCode( 1 );
+        msg.setContent( "获取成功" );
+        msg.setPayload( contracts );
+
         return msg;
     }
 

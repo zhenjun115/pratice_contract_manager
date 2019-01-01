@@ -1,5 +1,8 @@
 package com.contract.manager.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.validation.constraints.NotBlank;
 import java.util.List;
 
@@ -19,6 +22,16 @@ public class Contract {
 
 	private ContractParty partyA; // 甲方信息
 	private ContractParty partyB; // 乙方信息
+
+	@Getter
+	@Setter
+	//合同状态
+	private String status;
+
+	@Getter
+	@Setter
+	//分类编号
+	private String catCode;
 
 	public String getContractId() {
 		return this.contractId;

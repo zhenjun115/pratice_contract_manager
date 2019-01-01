@@ -6,9 +6,21 @@
         select * from contract
     </select>
 
+    <select id="queryAll" parameterType="com.contract.manager.model.Contract" resultType="com.contract.manager.model.Contract">
+        select contract.* from contract join contract_template template on contract.templateid = template.templateId
+        where 1 = 1
+        <if test="catCode != null">
+            and template.cat_code = #{catCode}
+        </if>
+        <if test="status != null">
+            and contract.status = #{status}
+        </if>
+    </select>
+
     <!-- 获取合同信息 -->
     <select id="fetch" parameterType="com.contract.manager.model.Contract" resultType="com.contract.manager.model.Contract">
-        select * from contract where contractid = #{contractId}
+        select contract.* from contract join contract_template template on contract.templateid = template.templateId
+        where template.cat_code = #{catCode} and contract.status = #{status}
     </select>
     
     <!-- 根据合同模版编号创建合同草稿 -->

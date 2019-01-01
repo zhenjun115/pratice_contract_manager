@@ -7,6 +7,7 @@ import java.util.Map;
 import com.contract.manager.mapper.ContractMapper;
 import com.contract.manager.model.Contract;
 
+import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,10 @@ public class ContractService
 
   public List<Contract> selectAll() {
     return contractMapper.selectAll();
+  }
+
+  public List<Contract> queryAll(Contract contract ) {
+    return contractMapper.queryAll( contract );
   }
 
   public Contract fetch( Contract contract ) {

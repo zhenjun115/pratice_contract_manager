@@ -1,8 +1,9 @@
 package com.contract.manager.controller;
 
+import com.contract.manager.model.Activity;
 import com.contract.manager.model.Contract;
 import com.contract.manager.model.Msg;
-import com.contract.manager.service.WorkFlowService;
+import com.contract.manager.service.ActivityService;
 import com.contract.manager.util.JwtTokenUtil;
 //import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,30 +11,24 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 
 @RestController
-@RequestMapping( "/workflow/activity" )
+@RequestMapping( "/activity" )
 public class ActivityController {
 
     @Autowired
-    WorkFlowService workFlowService;
+    ActivityService activityService;
 
 	/**
 	 * 获取待办任务
 	 * @return
 	 */
-    @RequestMapping( "task" )
+    @RequestMapping( "tasks" )
     public @ResponseBody Msg fetch(@RequestHeader HttpHeaders headers) {
         String userName = JwtTokenUtil.getAuthenticationUser(headers);
-//        List<Task> tasks = workFlowService.fetchTasks( userName );
-        HashMap<String,Object> payload = new HashMap<String,Object>();
 
-//        for( Task task : tasks ) {
-//            payload.put( "name", task.getName() );
-//            payload.put( "createTime", task.getCreateTime() );
-//        }
-
-        // System.out.println( "tasks: " + tasks.size() );
+        List<Activity> payload = activityService.fetch();
 
         Msg msg = new Msg();
         msg.setCode( 1 );
@@ -53,7 +48,6 @@ public class ActivityController {
         Msg msg = new Msg();
         msg.setCode( 1 );
         msg.setContent( "" );
-//        msg.setPayload( workFlowService.fetchProcess( "2505", "user" ) );
 
         return msg;
     }

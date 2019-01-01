@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//com.order.test.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.contract.manager.mapper.PurchaseTemplateMapper">
+
+    <insert id="add" parameterType="com.contract.manager.model.PurchaseTemplate">
+        insert into contract_template ( templateId, title, content, cat_code, fileName ) 
+        values
+        ( #{templateId}, #{name}, #{desc}, 'cat_1', #{file} )
+    </insert>
+
+	<!-- 根据模版代号获取模版 -->
+    <!-- <select id="fetch" parameterType="java.util.List" resultType="com.contract.manager.model.PurchaseTemplate">
+        select * from contract_template
+        <if test="list != null">
+            where cat_code in
+            <foreach collection="list" item="catCode" index="index" open="(" close=")" separator=",">
+                #{catCode}
+            </foreach>
+        </if>
+    </select> -->
+
+    <!-- 根据模版代号获取模版 -->
+    <select id="fetch" parameterType="com.contract.manager.model.PurchaseTemplate" resultType="com.contract.manager.model.PurchaseTemplate">
+        select * from contract_template where cat_code = 'cat_1'
+        <if test="keyword != null">
+        and title like '%'|| #{keyword} || '%'
+        </if>
+    </select>
+
+    <select id="fetchByTemplateId" parameterType="java.lang.String" resultType="com.contract.manager.model.PurchaseTemplate">
+        select * from contract_template where templateId = #{templateId}
+    </select>
+</mapper>

@@ -13,6 +13,8 @@ public interface ContractMapper {
   //@Select( "select * from contract" )
   List<Contract> selectAll();
 
+  List<Contract> queryAll(Contract contract );
+
   Contract fetch( Contract contract );
 
   long createDraft( Contract contract );

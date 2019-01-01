@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.UUID;
 
 public class CommonUtil
 {
@@ -37,5 +38,10 @@ public class CommonUtil
       ioException.printStackTrace();
     }
     return newFile;
+  }
+
+  public static String randomUUID() {
+    String uuid = UUID.randomUUID().toString().replace("-", "");
+    return uuid;
   }
 }
