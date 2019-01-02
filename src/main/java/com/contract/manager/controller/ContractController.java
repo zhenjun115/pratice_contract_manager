@@ -2,10 +2,7 @@ package com.contract.manager.controller;
 
 import java.util.*;
 
-import com.contract.manager.model.Contract;
-import com.contract.manager.model.ContractFile;
-import com.contract.manager.model.ContractParty;
-import com.contract.manager.model.Msg;
+import com.contract.manager.model.*;
 import com.contract.manager.service.ContractFileService;
 import com.contract.manager.service.ContractPartyService;
 import com.contract.manager.service.ContractService;
@@ -310,48 +307,29 @@ public class ContractController {
 
     /**
      * 获取所有合同
-     * @param contract
+     * @param param
      * @return
      */
     @RequestMapping( "/contract/fetch/all" )
-    public @ResponseBody Msg fetchAll( @RequestBody Contract contract ) {
-        PageHelper.startPage(1, 5 );
+    public @ResponseBody Msg fetchAll(@RequestBody ContractQueryParam param) {
+        Contract contract = param.getContract();
+        Page page = param.getPage();
+
+        if( page == null ) {
+            page = new Page();
+        }
+
+        PageHelper.startPage(page.getPageIndex(), page.getPageSize() );
         List<Contract> contracts = contractService.queryAll( contract );
 
+        Map<String,Object> payload = new HashMap<String,Object>();
+        payload.put( "contracts", contracts );
+        payload.put( "page", page );
+
         Msg msg = new Msg();
         msg.setCode( 1 );
         msg.setContent( "获取成功" );
-        msg.setPayload( contracts );
-
-        return msg;
-    }
-
-    /**
-     * 获取订立中的合同列表
-     * @return
-     */
-    @RequestMapping("/contract/fetch/carryout")
-    public @ResponseBody Msg fetchCarryOut() {
-        List<Contract> contractList = contractService.selectAll();
-        Msg msg = new Msg();
-        msg.setCode( 1 );
-        msg.setContent( "获取成功" );
-        msg.setPayload( contractList );
-
-        return msg;
-    }
-
-    /**
-     * 获取履行中的合同列表
-     * @return
-     */
-    @RequestMapping("/contract/fetch/process")
-    public @ResponseBody Msg fetchProcess() {
-        List<Contract> contractList = contractService.selectAll();
-        Msg msg = new Msg();
-        msg.setCode( 1 );
-        msg.setContent( "获取成功" );
-        msg.setPayload( contractList );
+        msg.setPayload( payload );
 
         return msg;
     }
