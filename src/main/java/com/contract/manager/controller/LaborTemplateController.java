@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping( "/purchase/template" )
-public class PurchaseTemplateController {
+@RequestMapping( "/labor/template" )
+public class LaborTemplateController {
 
     @Autowired
     TemplateService templateService;
@@ -27,12 +27,13 @@ public class PurchaseTemplateController {
     @RequestMapping("add")
     public Msg add( @RequestBody Template template ) {
         template.setTemplateId( CommonUtil.randomUUID() );
-        template.setCatCode( "cat_1" );
+        template.setCatCode( "cat_2" );
+
         boolean added = templateService.add( template );
-        
+
         Msg msg = new Msg();
         msg.setCode( 1 );
-        msg.setContent( "上传采购模版: " + added );
+        msg.setContent( "上传劳务模版: " + added );
         msg.setPayload( template );
 
         return msg;
@@ -58,7 +59,7 @@ public class PurchaseTemplateController {
      */
     @RequestMapping("fetch")
     public Msg fetch( @RequestBody Template template ) {
-        template.setCatCode( "cat_1" );
+        template.setCatCode( "cat_2" );
         List<Template> templates = templateService.fetch( template );
 
         Msg msg = new Msg();

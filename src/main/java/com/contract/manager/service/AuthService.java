@@ -37,7 +37,7 @@ public class AuthService implements UserDetailsService {
      */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        String password = passwordEncoder().encode("123456");
+        // String password = passwordEncoder().encode("123456");
         // System.out.println( password );
 
         User user = userMapper.selectOne( username );

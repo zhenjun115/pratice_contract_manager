@@ -7,6 +7,7 @@ import com.contract.manager.service.UserService;
 import com.contract.manager.util.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -58,6 +59,13 @@ public class UserController {
         // 获取token关联的用户登录名称
         String userName = JWT.decode( token.substring(7) ).getSubject();
         user.setUserName( userName );
+
+        // 更新密码
+        if( user.getPassword() != null && user.getPassword().equals( "" ) == false ) {
+            // user.setPassword( "" );
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+            user.setPassword( passwordEncoder.encode( user.getPassword() ) );
+        }
 
         boolean saved = userService.update( user );
 

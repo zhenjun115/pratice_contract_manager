@@ -15,6 +15,12 @@ public class Msg
     this.content = content;
   }
 
+  public Msg(int code, String content, Object payload ) {
+    this.code = code;
+    this.content = content;
+    this.payload = payload;
+  }
+
   public void setCode( int code ) {
     this.code = code;
   }

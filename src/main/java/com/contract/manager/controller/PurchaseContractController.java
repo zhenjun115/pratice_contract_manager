@@ -2,7 +2,6 @@ package com.contract.manager.controller;
 
 import com.contract.manager.model.Msg;
 import com.contract.manager.model.PurchaseContract;
-import com.contract.manager.model.PurchaseTemplate;
 
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;

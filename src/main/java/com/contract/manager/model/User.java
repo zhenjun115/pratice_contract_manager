@@ -13,6 +13,7 @@ public class User implements UserDetails {
 	private String location;
 	private String position;
 	private String email;
+	private String phone;
 	private String userid;
 
 	public User() {
@@ -116,4 +117,11 @@ public class User implements UserDetails {
 		return userName;
 	}
 
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
 }

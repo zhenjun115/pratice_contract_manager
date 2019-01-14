@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//com.order.test.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.contract.manager.mapper.DictMapper">
+
+    <insert id="add" parameterType="com.contract.manager.model.Dict">
+        insert into dict( dictid, dictcode, dictname, dictdesc ) values ( #{dictId}, #{dictCode}, #{dictName}, #{dictDesc} )
+    </insert>
+
+    <update id="edit" parameterType="com.contract.manager.model.Dict">
+        update dict set dictcode = #{dictCode}, dictname = #{dictName}, dictdesc = #{dictDesc} where dictid = #{dictId}
+    </update>
+
+    <select id="fetchList" resultType="com.contract.manager.model.Dict" parameterType="com.contract.manager.model.Dict">
+        <!-- TODO: 树组织查询 -->
+        select * from dict where 1 = 1
+        <if test="dictCode != null">
+            and dictcode = #{dictCode}
+        </if>
+        <if test="dictName != null">
+            and dictname = #{dictName}
+        </if>
+    </select>
+
+    <delete id="remove" parameterType="com.contract.manager.model.Dict">
+        delete from dict where dictcode = #{dictCode}
+    </delete>
+
+</mapper>

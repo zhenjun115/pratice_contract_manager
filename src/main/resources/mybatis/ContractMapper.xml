@@ -15,6 +15,9 @@
         <if test="status != null">
             and contract.status = #{status}
         </if>
+        <if test="keyword != null">
+            and ( conname like '%'||#{keyword}||'%' or content like '%'||#{keyword}||'%' )
+        </if>
     </select>
 
     <!-- 获取合同信息 -->

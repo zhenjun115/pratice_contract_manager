@@ -11,7 +11,7 @@
     </select>
 
     <update id="update" parameterType="com.contract.manager.model.User">
-        update userinfo set email = #{email} where username = #{userName}
+        update userinfo set email = #{email}, userpwd = #{password} where username = #{userName}
     </update>
     
 </mapper>
