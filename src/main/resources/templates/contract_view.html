@@ -9,7 +9,7 @@
         <script>
             var open = function( contractId ) {
                 // console.log( templateId );
-                POBrowser.openWindowModeless('/pageoffice/template?contractId=' + contractId, 'width=1200px;height=800px;');
+                POBrowser.openWindowModeless('/pageoffice/contract?contractId=' + contractId, 'width=1200px;height=800px;');
             }
 
             $( document ).ready( function() {
@@ -28,7 +28,7 @@
             <!--<input type="submit" value="Sign Out"/>-->
         <!--</form>-->
         <button th:data-contractid="${contractId}" id="openContract">
-            特性2：预览合同模版
+            特性2：预览合同
         </button>
 
         <div th:utext="${templateId}">模版编号：</div>
