@@ -5,11 +5,10 @@ import com.contract.manager.service.ContractFileService;
 import com.contract.manager.service.ContractPartyService;
 import com.contract.manager.service.ContractService;
 import com.contract.manager.service.WorkFlowService;
+import com.contract.manager.util.CommonUtil;
 import com.contract.manager.util.FileUploader;
-import com.contract.manager.util.JwtTokenUtil;
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,11 +29,6 @@ public class LaborContractController {
 
     @Autowired
     private WorkFlowService workFlowService; // 流程服务
-
-//    @RequestMapping("/fetch")
-//    public List<Contract> selectAll() {
-//        return contractService.selectAll();
-//    }
 
     /**
      * 劳务合同,基于合同模版创建合同
@@ -144,7 +138,7 @@ public class LaborContractController {
      * @param contract
      * @return
      */
-    @RequestMapping("/contract/party/update")
+    @RequestMapping("/party/update")
     public @ResponseBody Msg updateParty(@RequestBody Contract contract) {
         ContractParty partyA = contract.getPartyA();
         ContractParty partyB = contract.getPartyB();
@@ -160,11 +154,11 @@ public class LaborContractController {
         Msg msg = new Msg();
         if( !savedPartyA || !savedPartyB ) {
             msg.setCode(0);
-            msg.setContent("获取失败");
-            msg.setPayload( contract );
+            msg.setContent("保存失败");
+            msg.setPayload( null );
         } else {
             msg.setCode(1);
-            msg.setContent("获取成功");
+            msg.setContent("保存成功");
             msg.setPayload( contract );
         }
 
@@ -176,7 +170,7 @@ public class LaborContractController {
      * @param contract
      * @return
      */
-    @RequestMapping("/contract/files")
+    @RequestMapping("/files/fetch")
     public @ResponseBody Msg fetchFiles(@RequestBody Contract contract) {
         List<ContractFile> files = contractFileService.fetchFiles( contract );
         Msg msg = new Msg();
@@ -194,13 +188,15 @@ public class LaborContractController {
      * @param contractId
      * @return
      */
-    @RequestMapping( "/contract/file/add" )
+    @RequestMapping( "/file/add" )
     public @ResponseBody Msg addFile(@RequestParam MultipartFile file, @RequestParam String fileCat, @RequestParam String contractId ) {
         Msg upload = FileUploader.save( file );
+        ContractFile contractFile = new ContractFile();
+
         if( upload.getCode() == 200 ) {
             Map<String,Object> payload = (HashMap<String, Object>) upload.getPayload();
 
-            ContractFile contractFile = new ContractFile();
+            contractFile.setFileId( CommonUtil.randomUUID() );
             contractFile.setContractId( contractId );
             contractFile.setFileName((String) payload.get( "fileName") );
             contractFile.setFilePath((String) payload.get( "filePath") );
@@ -212,7 +208,7 @@ public class LaborContractController {
         Msg msg = new Msg();
         msg.setCode( 1 );
         msg.setContent( "上传文件成功" );
-        msg.setPayload( upload );
+        msg.setPayload( contractFile );
 
         return msg;
     }
@@ -222,7 +218,7 @@ public class LaborContractController {
      * @param contractFile
      * @return
      */
-    @RequestMapping( "/contract/file/del" )
+    @RequestMapping( "/file/del" )
     public @ResponseBody Msg deleteFile( @RequestBody ContractFile contractFile ) {
         boolean deleted = contractFileService.delFile( contractFile );
         Msg msg = new Msg();
@@ -239,7 +235,7 @@ public class LaborContractController {
      * @param contract
      * @return
      */
-    @RequestMapping("/contract/save")
+    @RequestMapping("/save")
     public @ResponseBody Msg saveDraft(@RequestBody @Validated Contract contract) {
         //1. 保存草稿基本信息
         boolean contractSaved = contractService.saveDraft(contract);

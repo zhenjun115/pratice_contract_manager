@@ -3,15 +3,19 @@ package com.contract.manager.controller;
 import java.util.HashMap;
 import java.util.List;
 
+import com.contract.manager.model.CommonConfig;
 import com.contract.manager.model.Msg;
 import com.contract.manager.model.Template;
 import com.contract.manager.service.TemplateService;
 import com.contract.manager.util.CommonUtil;
 
+import com.contract.manager.util.FileUploader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping( "/labor/template" )
@@ -19,6 +23,9 @@ public class LaborTemplateController {
 
     @Autowired
     TemplateService templateService;
+
+    @Autowired
+    CommonConfig commonConfig;
 
     /**
      * 上传采购模版
@@ -79,6 +86,22 @@ public class LaborTemplateController {
         msg.setContent( "获取采购模版成功" );
         msg.setPayload( template );
         return msg;
+    }
+
+    /**
+     * 上传合同模版文件
+     * @param file
+     * @return
+     */
+    @RequestMapping( "/upload" )
+    public Msg upload(@RequestParam MultipartFile file ) {
+        String catCode = "cat2";
+        Msg upload = FileUploader.save( file, commonConfig.getContractDir() );
+
+        // 1.获取模版参数信息
+        // 2.保存到数据库中
+
+        return upload;
     }
 
     /**
