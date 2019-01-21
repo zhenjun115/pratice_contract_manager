@@ -73,7 +73,7 @@ public class PageOfficeController {
         poCtrl.webOpen( contract.getConname(), OpenModeType.docNormalEdit,"");
         map.put("pageoffice",poCtrl.getHtmlCode("PageOfficeCtrl1"));
         //--- PageOffice的调用代码 结束 -----
-        ModelAndView mv = new ModelAndView("contract_view");
+        ModelAndView mv = new ModelAndView("Word");
         mv.addAllObjects( map );
         return mv;
     }

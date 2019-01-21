@@ -37,13 +37,13 @@ public class LaborContractController {
 //    }
 
     /**
-     * 基于合同模版创建合同草稿
+     * 劳务合同,基于合同模版创建合同
      *
      * @param contract 模版编号
      * @return
      */
-    @RequestMapping("/draft/create")
-    public @ResponseBody Msg createDraft(@RequestBody Contract contract) {
+    @RequestMapping("/create")
+    public @ResponseBody Msg create(@RequestBody Contract contract) {
         //1. 创建草稿
         String contractId = UUID.randomUUID().toString().replace("-", "");
         String conname = new Date().toString();
@@ -154,13 +154,19 @@ public class LaborContractController {
         partyB.setContractId( contract.getContractId() );
         partyB.setType( "partyB" );
 
-        contractPartyService.saveParty( partyA );
-        contractPartyService.saveParty( partyB );
+        boolean savedPartyA = contractPartyService.saveParty( partyA );
+        boolean savedPartyB = contractPartyService.saveParty( partyB );
 
         Msg msg = new Msg();
-        msg.setCode(1);
-        msg.setContent("获取成功");
-        msg.setPayload( contract );
+        if( !savedPartyA || !savedPartyB ) {
+            msg.setCode(0);
+            msg.setContent("获取失败");
+            msg.setPayload( contract );
+        } else {
+            msg.setCode(1);
+            msg.setContent("获取成功");
+            msg.setPayload( contract );
+        }
 
         return msg;
     }

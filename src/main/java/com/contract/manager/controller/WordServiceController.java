@@ -115,7 +115,7 @@ public class WordServiceController {
     }
 
     @RequestMapping( "contract/generate" )
-    public Msg editWord( @RequestBody Map<String,Object> params ) {
+    public Msg generateWord( @RequestBody Map<String,Object> params ) {
         String templateId = (String) params.get( "templateId" );
         String contractId = UUID.randomUUID().toString().replace( "-","" );
 
@@ -149,6 +149,46 @@ public class WordServiceController {
         Msg msg = new Msg();
         msg.setCode( 1 );
         msg.setContent( "生成模版成功" );
+        msg.setPayload( contractId );
+
+        return msg;
+    }
+
+    @RequestMapping( "contract/update" )
+    public Msg editWord( @RequestBody Map<String,Object> params ) {
+        String contractId = (String) params.get( "contractId" );
+
+        // 1.从db中读取合同信息
+        Contract contract = contractService.fetch( contractId );
+//        ContractTemplate template = templateService.fetchByTemplateId( templateId );
+
+        // 2.更新合同文件
+//        String templateFileName = template.getFileName();
+        // String templateFileName = "test_2.docx";
+       // String contractFileName = generateContractFileNameWithSuffix( contract.getFileName(), contractId );
+        // String templatePath = httpServletRequest.getServletContext().getRealPath( "/pageoffice/" + templateFileName );
+        String contractPath = commonConfig.getContractDir() + contract.getConname();
+        // String contractPath = httpServletRequest.getServletContext().getRealPath( "/pageoffice/" + contractFileName );
+        // String contractPath = commonConfig.getContractDir() + contractFileName ;
+        // File contractFile = CommonUtil.copyFile( templatePath, contractPath );
+
+        // POIUtil.generateThumbnailImageFromWord( contractPath, commonConfig.getContractDir() );
+
+        // System.out.print();
+
+        // 3.替换合同文件中的模版
+        Map<String,String> datas = ( HashMap<String,String> ) params.get( "datas" );
+        // TODO: 编码存在问题
+        // datas.put( "合同管理系统自动填写-甲方公司名称", "杭州测试公司名称" );
+        POIUtil.generateDocWithDatas(datas, new File( contractPath ) );
+
+        // 4.保存合同到数据库
+        // contractService.save(contractId, contractFileName, templateId );
+
+        // 6.返回合同编号和预览地址
+        Msg msg = new Msg();
+        msg.setCode( 1 );
+        msg.setContent( "更新模版成功" );
         msg.setPayload( contractId );
 
         return msg;
