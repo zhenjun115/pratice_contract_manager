@@ -5,9 +5,13 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import com.contract.manager.model.OfficePlaceholder;
 import org.apache.poi.ooxml.POIXMLProperties;
 import org.apache.poi.util.IOUtils;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
@@ -16,6 +20,7 @@ import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
+import org.apache.tomcat.util.buf.StringUtils;
 
 public class POIUtil
 {
@@ -86,5 +91,45 @@ public class POIUtil
         } catch ( Exception exception ) {
             exception.printStackTrace();
         }
+    }
+
+    public static List<OfficePlaceholder> generateParamsFromDocs(String fileName, String regex ) {
+        List<OfficePlaceholder> params = new ArrayList<OfficePlaceholder>();
+        Pattern pattern = Pattern.compile( regex );
+
+        try {
+            FileInputStream source = new FileInputStream(fileName);
+            XWPFDocument doc = new XWPFDocument( source );
+
+            for (XWPFParagraph p : doc.getParagraphs()) {
+                String text = "";
+                for( XWPFRun run : p.getRuns() ) {
+                    text += run.text();
+                }
+
+                Matcher matcher = pattern.matcher( text );
+                if( matcher.find() ) {
+                    String paramStr = matcher.group();
+                    paramStr = paramStr.substring( 2, paramStr.length() - 1 );
+                    String[] paramItem = paramStr.split( "\\," );
+                    OfficePlaceholder placeholder = new OfficePlaceholder();
+                    for( String item : paramItem ) {
+                        String[] keyValPair = item.split( "\\=" );
+                        if( keyValPair[0].trim().equals( "key") ) {
+                            placeholder.setName( keyValPair[1].trim() );
+                        } else if( keyValPair[0].trim().equals("desc") ) {
+                            placeholder.setDesc( keyValPair[1].trim() );
+                        }
+                    }
+                    params.add( placeholder );
+                }
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return params;
     }
 }

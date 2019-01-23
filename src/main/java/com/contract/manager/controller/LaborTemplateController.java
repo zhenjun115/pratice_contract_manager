@@ -2,14 +2,15 @@ package com.contract.manager.controller;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import com.contract.manager.model.CommonConfig;
-import com.contract.manager.model.Msg;
-import com.contract.manager.model.Template;
+import com.contract.manager.model.*;
+import com.contract.manager.service.TemplateParamService;
 import com.contract.manager.service.TemplateService;
 import com.contract.manager.util.CommonUtil;
 
 import com.contract.manager.util.FileUploader;
+import com.contract.manager.util.POIUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +24,9 @@ public class LaborTemplateController {
 
     @Autowired
     TemplateService templateService;
+
+    @Autowired
+    TemplateParamService templateParamService;
 
     @Autowired
     CommonConfig commonConfig;
@@ -88,6 +92,20 @@ public class LaborTemplateController {
         return msg;
     }
 
+    @RequestMapping( "fetchParamsByTemplateId" )
+    public Msg fetchParamsByTemplateId(@RequestBody HashMap<String,Object> params) {
+        String templateId = (String)params.get( "templateId" );
+        Template template = templateService.fetchByTemplateId( templateId );
+
+        List<TemplateParam> officePlaceholders = templateParamService.fetchByFilePath( commonConfig.getTemplateDir() + template.getFileName() );
+
+        Msg msg = new Msg();
+        msg.setCode( 1 );
+        msg.setContent( "获取模版参数成功成功" );
+        msg.setPayload( officePlaceholders );
+        return msg;
+    }
+
     /**
      * 上传合同模版文件
      * @param file
@@ -96,10 +114,18 @@ public class LaborTemplateController {
     @RequestMapping( "/upload" )
     public Msg upload(@RequestParam MultipartFile file ) {
         String catCode = "cat2";
-        Msg upload = FileUploader.save( file, commonConfig.getContractDir() );
+        Msg upload = FileUploader.save( file, commonConfig.getTemplateDir() );
 
         // 1.获取模版参数信息
+        Map<String,Object> payload = (Map<String, Object>) upload.getPayload();
+        List<OfficePlaceholder> officePlaceholders = POIUtil.generateParamsFromDocs( (String)payload.get( "filePath" ), "^\\$.*}$" );
         // 2.保存到数据库中
+        Map<String,Object> params = new HashMap<String, Object>();
+        params.put( "filePath", payload.get("filePath") );
+        params.put( "officePlaceholders", officePlaceholders );
+        templateParamService.addParam( params );
+
+        payload.put( "officePlaceholders", templateParamService.fetchByFilePath( (String)payload.get("filePath") ) );
 
         return upload;
     }
@@ -114,6 +140,22 @@ public class LaborTemplateController {
         msg.setCode( 1 );
         msg.setContent( "删除采购模版成功" );
         msg.setPayload( null );
+        return msg;
+    }
+
+    /**
+     * 根据模版文件获取模版参数
+     * @return
+     */
+    @RequestMapping( "/param/fetch" )
+    public Msg fetchParams( @RequestParam String filePath ) {
+        List<TemplateParam> params = templateParamService.fetchByFilePath( filePath );
+
+        Msg msg = new Msg();
+        msg.setCode(1);
+        msg.setContent( "获取模版参数" );
+        msg.setPayload( params );
+
         return msg;
     }
 }

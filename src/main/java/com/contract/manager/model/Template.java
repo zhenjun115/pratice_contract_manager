@@ -20,4 +20,6 @@ public class Template {
 	private String title;
 
 	private String keyword;
+
+	private String fileName;
 }

@@ -40,17 +40,19 @@ public class FileUploader {
 
         try {
             byte[] bytes = file.getBytes();
-            Path path = Paths.get(folder + file.getOriginalFilename());
-            Files.write(path, bytes);
+            String newFileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+            Path path = Paths.get(folder + newFileName );
+            Files.write( path, bytes );
             Map<String, Object> result = new HashMap<String, Object>();
-            result.put("filePath", path.getFileName().toString());
-            result.put("fileName", file.getOriginalFilename());
-            msg.setCode(200);
-            msg.setContent("上传成功");
-            msg.setPayload(result);
-        } catch (Exception e) {
-            msg.setCode(400);
-            msg.setContent("上传失败");
+            result.put( "filePath", path.toString() );
+            result.put( "fileName", newFileName );
+            result.put( "originalFileName", file.getOriginalFilename() );
+            msg.setCode( 200 );
+            msg.setContent( "上传成功" );
+            msg.setPayload( result );
+        } catch ( Exception e ) {
+            msg.setCode( 400 );
+            msg.setContent( "上传失败" );
         }
 
         return msg;
