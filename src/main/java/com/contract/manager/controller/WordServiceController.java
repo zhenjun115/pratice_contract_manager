@@ -9,6 +9,7 @@ import com.contract.manager.service.ContractTemplateService;
 import com.contract.manager.util.CommonUtil;
 import com.contract.manager.util.POIUtil;
 
+import com.zhuozhengsoft.pageoffice.FileSaver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -124,26 +125,18 @@ public class WordServiceController {
 
         // 2.生成合同文件
         String templateFileName = template.getFileName();
-        // String templateFileName = "test_2.docx";
         String contractFileName = generateContractFileNameWithSuffix( template.getFileName(), contractId );
-        // String templatePath = httpServletRequest.getServletContext().getRealPath( "/pageoffice/" + templateFileName );
         String templatePath = commonConfig.getTemplateDir() + templateFileName;
-        // String contractPath = httpServletRequest.getServletContext().getRealPath( "/pageoffice/" + contractFileName );
         String contractPath = commonConfig.getContractDir() + contractFileName ;
         File contractFile = CommonUtil.copyFile( templatePath, contractPath );
 
-        // POIUtil.generateThumbnailImageFromWord( contractPath, commonConfig.getContractDir() );
-
-        // System.out.print();
-
         // 3.替换合同文件中的模版
         Map<String,String> datas = ( HashMap<String,String> ) params.get( "datas" );
-        // TODO: 编码存在问题
-        // datas.put( "合同管理系统自动填写-甲方公司名称", "杭州测试公司名称" );
+
         POIUtil.generateDocWithDatas(datas, new File( contractPath ) );
 
         // 4.保存合同到数据库
-        contractService.save(contractId, contractFileName, templateId );
+        contractService.save( contractId, contractFileName, templateId );
 
         // 6.返回合同编号和预览地址
         Msg msg = new Msg();
@@ -160,36 +153,41 @@ public class WordServiceController {
 
         // 1.从db中读取合同信息
         Contract contract = contractService.fetch( contractId );
-//        ContractTemplate template = templateService.fetchByTemplateId( templateId );
 
-        // 2.更新合同文件
-//        String templateFileName = template.getFileName();
-        // String templateFileName = "test_2.docx";
-       // String contractFileName = generateContractFileNameWithSuffix( contract.getFileName(), contractId );
-        // String templatePath = httpServletRequest.getServletContext().getRealPath( "/pageoffice/" + templateFileName );
         String contractPath = commonConfig.getContractDir() + contract.getConname();
-        // String contractPath = httpServletRequest.getServletContext().getRealPath( "/pageoffice/" + contractFileName );
-        // String contractPath = commonConfig.getContractDir() + contractFileName ;
-        // File contractFile = CommonUtil.copyFile( templatePath, contractPath );
-
-        // POIUtil.generateThumbnailImageFromWord( contractPath, commonConfig.getContractDir() );
-
-        // System.out.print();
 
         // 3.替换合同文件中的模版
         Map<String,String> datas = ( HashMap<String,String> ) params.get( "datas" );
-        // TODO: 编码存在问题
-        // datas.put( "合同管理系统自动填写-甲方公司名称", "杭州测试公司名称" );
-        POIUtil.generateDocWithDatas(datas, new File( contractPath ) );
 
-        // 4.保存合同到数据库
-        // contractService.save(contractId, contractFileName, templateId );
+        POIUtil.generateDocWithDatas(datas, new File( contractPath ) );
 
         // 6.返回合同编号和预览地址
         Msg msg = new Msg();
         msg.setCode( 1 );
         msg.setContent( "更新模版成功" );
         msg.setPayload( contractId );
+
+        return msg;
+    }
+
+    @RequestMapping( "contract/save" )
+    public void saveWord() {
+        FileSaver fs=new FileSaver(httpServletRequest,httpServletResponse);
+        fs.saveToFile(commonConfig.getContractDir() + fs.getFileName() );
+        fs.close();
+    }
+
+    @RequestMapping( "contract/demo" )
+    public Msg demo( ) {
+        // demo文件路径
+        String demoFile = "test_demo.docx";
+        String targetFile = "test_demo_result.docx";
+
+        Msg msg = new Msg();
+        // 读取word文件
+        String filePath = commonConfig.getContractDir() + demoFile;
+        String targetPath = commonConfig.getContractDir() + targetFile;
+        POIUtil.testDemo( filePath, targetPath );
 
         return msg;
     }

@@ -67,9 +67,9 @@ public class PageOfficeController {
         Contract contract = contractService.fetch( contractId );
         //--- PageOffice的调用代码 开始 -----
         PageOfficeCtrl poCtrl=new PageOfficeCtrl(request);
-        poCtrl.setServerPage("/pageoffice/poserver.zz");//设置授权程序servlet
-        // poCtrl.addCustomToolButton("保存","Save",1); //添加自定义按钮
-        // poCtrl.setSaveFilePage("/pageoffice/save");//设置保存的action
+        poCtrl.setServerPage( "/pageoffice/poserver.zz" );//设置授权程序servlet
+        poCtrl.addCustomToolButton("保存","Save",1 ); //添加自定义按钮
+        poCtrl.setSaveFilePage( "/interface/contract/save" );//设置保存的action
         poCtrl.webOpen( contract.getConname(), OpenModeType.docNormalEdit,"");
         map.put("pageoffice",poCtrl.getHtmlCode("PageOfficeCtrl1"));
         //--- PageOffice的调用代码 结束 -----

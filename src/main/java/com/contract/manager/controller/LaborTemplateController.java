@@ -118,7 +118,7 @@ public class LaborTemplateController {
 
         // 1.获取模版参数信息
         Map<String,Object> payload = (Map<String, Object>) upload.getPayload();
-        List<OfficePlaceholder> officePlaceholders = POIUtil.generateParamsFromDocs( (String)payload.get( "filePath" ), "^\\$.*}$" );
+        List<OfficePlaceholder> officePlaceholders = POIUtil.generateParamsFromDocs( (String)payload.get( "filePath" ), "^\\${.*}$" );
         // 2.保存到数据库中
         Map<String,Object> params = new HashMap<String, Object>();
         params.put( "filePath", payload.get("filePath") );
