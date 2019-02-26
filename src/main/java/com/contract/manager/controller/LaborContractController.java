@@ -1,6 +1,11 @@
 package com.contract.manager.controller;
 
+import com.contract.manager.configuration.constant.CommonConstant;
 import com.contract.manager.model.*;
+import com.contract.manager.model.request.ContractInfoUpdateRequest;
+import com.contract.manager.model.request.ContractPartyUpdateRequest;
+import com.contract.manager.model.request.ContractQueryRequest;
+import com.contract.manager.model.response.ContractPartyResponse;
 import com.contract.manager.service.ContractFileService;
 import com.contract.manager.service.ContractPartyService;
 import com.contract.manager.service.ContractService;
@@ -116,18 +121,20 @@ public class LaborContractController {
     @RequestMapping("/party/fetch")
     public @ResponseBody Msg fetchParty(@RequestBody Contract contract) {
         //1. 获取甲方
-        ContractParty partyA = contractPartyService.fetchParty(contract, "partyA");
+        ContractParty partyMain = contractPartyService.fetchParty(contract, CommonConstant.PARTY_MAIN );
         //2. 获取乙方
-        ContractParty partyB = contractPartyService.fetchParty(contract, "partyB");
+        ContractParty partyOther = contractPartyService.fetchParty(contract, CommonConstant.PARTY_OTHER );
 
         //3. 返回消息
-        contract.setPartyA(partyA);
-        contract.setPartyB(partyB);
+        ContractPartyResponse response = new ContractPartyResponse();
+        response.setContractId( contract.getContractId() );
+        response.setPartyMain( partyMain );
+        response.setPartyOther( partyOther );
 
         Msg msg = new Msg();
         msg.setCode(1);
         msg.setContent("获取成功");
-        msg.setPayload(contract);
+        msg.setPayload( response );
 
         return msg;
     }
@@ -135,24 +142,22 @@ public class LaborContractController {
     /**
      * 更新签约主体信息
      *
-     * @param contract
+     * @param infoUpdateRequest
      * @return
      */
-    @RequestMapping("/party/update")
-    public @ResponseBody Msg updateParty(@RequestBody Contract contract) {
-        ContractParty partyA = contract.getPartyA();
-        ContractParty partyB = contract.getPartyB();
+    @RequestMapping("/info/update")
+    public @ResponseBody Msg updateInfo(@RequestBody ContractInfoUpdateRequest infoUpdateRequest ) {
+        Contract contract = infoUpdateRequest.getContract();
+        if( contract == null ) {
+            contract = new Contract();
+            infoUpdateRequest.setContract( contract );
+        }
 
-        partyA.setContractId( contract.getContractId() );
-        partyA.setType( "partyA" );
-        partyB.setContractId( contract.getContractId() );
-        partyB.setType( "partyB" );
-
-        boolean savedPartyA = contractPartyService.saveParty( partyA );
-        boolean savedPartyB = contractPartyService.saveParty( partyB );
+        contract.setContractId( infoUpdateRequest.getContractId() );
+        boolean savedInfo = contractService.saveInfo( contract );
 
         Msg msg = new Msg();
-        if( !savedPartyA || !savedPartyB ) {
+        if( !savedInfo ) {
             msg.setCode(0);
             msg.setContent("保存失败");
             msg.setPayload( null );
@@ -160,6 +165,41 @@ public class LaborContractController {
             msg.setCode(1);
             msg.setContent("保存成功");
             msg.setPayload( contract );
+        }
+
+        return msg;
+    }
+
+    /**
+     * 更新签约主体信息
+     *
+     * @param updateRequest
+     * @return
+     */
+    @RequestMapping("/party/update")
+    public @ResponseBody Msg updateParty(@RequestBody ContractPartyUpdateRequest updateRequest) {
+        ContractParty partyMain = updateRequest.getPartyMain();
+        ContractParty partyOther = updateRequest.getPartyOther();
+
+        partyMain.setContractId( updateRequest.getContractId() );
+        partyMain.setType(CommonConstant.PARTY_MAIN);
+
+        partyOther.setContractId( updateRequest.getContractId() );
+        partyOther.setType( CommonConstant.PARTY_OTHER );
+
+        // TODO: 增加事务管理
+        boolean savedPartyMain = contractPartyService.saveParty( partyMain );
+        boolean savedPartyOther = contractPartyService.saveParty( partyOther );
+
+        Msg msg = new Msg();
+        if( !savedPartyMain || !savedPartyOther ) {
+            msg.setCode(0);
+            msg.setContent("保存失败");
+            msg.setPayload( null );
+        } else {
+            msg.setCode(1);
+            msg.setContent("保存成功");
+            msg.setPayload( updateRequest );
         }
 
         return msg;
@@ -190,6 +230,7 @@ public class LaborContractController {
      */
     @RequestMapping( "/file/add" )
     public @ResponseBody Msg addFile(@RequestParam MultipartFile file, @RequestParam String fileCat, @RequestParam String contractId ) {
+        // TODO: 数据库中添加文件路径信息
         Msg upload = FileUploader.save( file );
         ContractFile contractFile = new ContractFile();
 
@@ -262,26 +303,28 @@ public class LaborContractController {
 
     /**
      * 获取所有合同
-     * @param param
+     * @param request
      * @return
      */
     @RequestMapping( "/fetch" )
-    public @ResponseBody Msg fetchAll(@RequestBody ContractQueryParam param) {
-        Contract contract = param.getContract();
-        Page page = param.getPage();
+    public @ResponseBody Msg fetchAll( @RequestBody ContractQueryRequest request ) {
+        Contract contract = request.getContract();
+        Page page = request.getPage();
 
         if( page == null ) {
             page = new Page();
+            request.setPage( page );
         }
 
         if( contract == null ) {
             contract = new Contract();
+            request.setContract( contract );
         }
 
-        contract.setCatCode( "cat_2" );
+        contract.setCatCode( CommonConstant.CATCODE_LABOR );
 
         PageHelper.startPage(page.getPageIndex(), page.getPageSize() );
-        List<Contract> contracts = contractService.queryAll( contract );
+        List<Contract> contracts = contractService.queryContract( request );
 
         Map<String,Object> payload = new HashMap<String,Object>();
         payload.put( "contracts", contracts );

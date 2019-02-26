@@ -5,12 +5,9 @@ import com.contract.manager.model.Contract;
 import com.contract.manager.model.Msg;
 import com.contract.manager.service.ActivityService;
 import com.contract.manager.util.JwtTokenUtil;
-//import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
 import java.util.List;
 
 @RestController

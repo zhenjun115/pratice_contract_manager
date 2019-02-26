@@ -4,12 +4,15 @@
 
 	<!-- 根据模版代号获取模版 -->
     <select id="fetch" parameterType="java.util.List" resultType="com.contract.manager.model.ContractTemplate">
-        select * from contract_template
+        select * from contract_template where 1 = 1
         <if test="list != null">
-            where cat_code in
+            and cat_code in
             <foreach collection="list" item="catCode" index="index" open="(" close=")" separator=",">
                 #{catCode}
             </foreach>
+        </if>
+        <if test="keyword != null">
+            and ( title like '%' || #{keyword} || '%' or content like '%' || #{keyword} || '%' )
         </if>
     </select>
 

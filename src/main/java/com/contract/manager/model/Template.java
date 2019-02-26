@@ -22,4 +22,7 @@ public class Template {
 	private String keyword;
 
 	private String fileName;
+
+	// 分页信息
+	private Page page;
 }

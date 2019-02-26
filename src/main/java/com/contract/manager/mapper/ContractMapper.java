@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.contract.manager.model.Contract;
 
+import com.contract.manager.model.request.ContractQueryRequest;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
@@ -13,7 +14,14 @@ public interface ContractMapper {
   //@Select( "select * from contract" )
   List<Contract> selectAll();
 
+  /**
+   * 查询合同列表
+   * @param contract
+   * @return
+   */
   List<Contract> queryAll(Contract contract );
+
+  List<Contract> queryContract(ContractQueryRequest request);
 
   Contract fetch( Contract contract );
 
@@ -24,4 +32,6 @@ public interface ContractMapper {
   long saveDraft( Contract contract );
 
   long save( Map<String,Object> contact );
+
+  boolean saveInfo( Contract contract );
 }

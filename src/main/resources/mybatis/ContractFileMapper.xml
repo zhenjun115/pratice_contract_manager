@@ -6,7 +6,8 @@
         insert into contract_file( fileid, contractid, filename, filepath, filecat ) values ( #{fileId}, #{contractId}, #{fileName}, #{filePath}, #{fileCat} )
     </insert>
 
-    <select id="fetchFiles" parameterType="com.contract.manager.model.Contract" resultType="com.contract.manager.model.ContractFile">
+    <select id="fetchFiles" parameterType="com.contract.manager.model.Contract"
+            resultType="com.contract.manager.model.ContractFile">
         select * from contract_file where contractid = #{contractId}
     </select>
 

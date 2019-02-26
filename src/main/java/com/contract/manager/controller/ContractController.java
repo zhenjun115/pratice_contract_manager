@@ -3,6 +3,7 @@ package com.contract.manager.controller;
 import java.util.*;
 
 import com.contract.manager.model.*;
+import com.contract.manager.model.request.ContractQueryRequest;
 import com.contract.manager.service.ContractFileService;
 import com.contract.manager.service.ContractPartyService;
 import com.contract.manager.service.ContractService;
@@ -311,7 +312,7 @@ public class ContractController {
      * @return
      */
     @RequestMapping( "/contract/fetch/all" )
-    public @ResponseBody Msg fetchAll(@RequestBody ContractQueryParam param) {
+    public @ResponseBody Msg fetchAll(@RequestBody ContractQueryRequest param) {
         Contract contract = param.getContract();
         Page page = param.getPage();
 

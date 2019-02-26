@@ -18,11 +18,35 @@
         </if>
     </select> -->
 
-    <!-- 根据模版代号获取模版 -->
-    <select id="fetch" parameterType="com.contract.manager.model.Template" resultType="com.contract.manager.model.Template">
-        select * from contract_template where cat_code = #{catCode}
+    <!-- 获取模版 -->
+    <select id="fetch" parameterType="com.contract.manager.model.request.TemplatePageRequest"
+            resultType="com.contract.manager.model.Template">
+        select
+            *
+        from
+            contract_template
+        where
+            1 = 1
+        <if test="template.catCode != null">
+            and cat_code = #{template.catCode}
+        </if>
         <if test="keyword != null">
-        and title like '%'|| #{keyword} || '%'
+            and ( title like concat( concat( '%', #{keyword} ), '%' ) or content like concat( concat( '%', #{keyword} ), '%' ) )
+        </if>
+    </select>
+
+    <!-- 根据关键字进行查询 -->
+    <select id="queryByKeyword" parameterType="java.util.Map"
+            resultType="com.contract.manager.model.Template">
+        select
+            *
+        from
+            contract_template
+        where
+            1 = 1
+
+        <if test="keyword != null">
+            and ( title like concat( concat( '%', #{keyword} ), '%' ) or content like concat( concat( '%', #{keyword} ), '%' ) )
         </if>
     </select>
 

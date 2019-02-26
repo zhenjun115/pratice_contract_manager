@@ -1,19 +1,15 @@
 package com.contract.manager.model;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+@Data
 public class PurchaseContract {
 
-	@Getter
-	@Setter
 	private String contractId;
 
-	@Getter
-	@Setter
 	private String name;
 
-	@Getter
-	@Setter
 	private String desc;
 }

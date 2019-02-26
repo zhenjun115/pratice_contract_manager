@@ -6,17 +6,24 @@
         <title>Hello World!</title>
         <script src="/pageoffice/jquery.min.js" ></script>
         <script src="/pageoffice/pageoffice.js" id="po_js_main"></script>
-        <script>
+        <script th:inline="javascript">
             var open = function( templateId ) {
                 // console.log( templateId );
                 POBrowser.openWindowModeless('/pageoffice/template?templateId=' + templateId, 'width=1200px;height=800px;');
             }
 
             $( document ).ready( function() {
+                var templateId = [[${templateId}]];
+
+
                 $( "#openTemplate" ).click( function() {
-                    var templateId = $( this ).data( "templateid" );
-                    open( templateId )
+                    // var templateId = $( this ).data( "templateid" );
+                    open( templateId );
                 } );
+
+                setTimeout( function() {
+                    $( "#openTemplate" ).trigger( "click" );
+                }, 600 );
             });
         </script>
     </head>
@@ -25,6 +32,6 @@
             特性1：预览合同模版
         </button>
 
-        <div th:utext="${templateId}">模版编号：</div>
+        <!--<div th:utext="${templateId}">模版编号：</div>-->
     </body>
 </html>
