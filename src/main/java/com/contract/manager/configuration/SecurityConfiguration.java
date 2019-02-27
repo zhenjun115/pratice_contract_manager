@@ -71,7 +71,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     http.cors().and().csrf().disable();
 
     http.authorizeRequests()
-      .antMatchers("/workflow/**", "/pageoffice/**", "/interface/**" ).permitAll()
+      .antMatchers("/workflow/**", "/pageoffice/**", "/interface/**", "/img/**" ).permitAll()
       .anyRequest().authenticated()
       .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
       .and()

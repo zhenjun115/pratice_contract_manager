@@ -7,14 +7,20 @@
     </select>
 
     <!-- 查询合同列表 -->
-    <select id="queryAll" parameterType="com.contract.manager.model.Contract" resultType="com.contract.manager.model.Contract">
+    <select id="query" parameterType="com.contract.manager.model.request.ContractPageRequest" resultType="com.contract.manager.model.Contract">
         select contract.* from contract join contract_template template on contract.templateid = template.templateId
         where 1 = 1
-        <if test="catCode != null">
-            and template.cat_code = #{catCode}
+        <if test="catCode != null and catCode.size > 0">
+            and template.cat_code in
+            <foreach collection="catCode" item="item" separator="," open="(" close=")">
+                #{item}
+            </foreach>
         </if>
-        <if test="status != null">
-            and contract.status = #{status}
+        <if test="status != null and status.size > 0">
+            and contract.status in
+            <foreach collection="status" item="item" separator="," open="(" close=")">
+                #{item}
+            </foreach>
         </if>
         <if test="keyword != null">
             and ( conname like concat ( concat( '%', #{keyword} ), '%' ) or content like concat( concat( '%', #{keyword} ), '%' ) )
@@ -22,7 +28,7 @@
     </select>
 
     <!-- 查询合同列表 -->
-    <select id="queryContract" parameterType="com.contract.manager.model.request.ContractQueryRequest"
+    <select id="queryContract" parameterType="com.contract.manager.model.request.ContractPageRequest"
             resultType="com.contract.manager.model.Contract">
         select contract.* from contract join contract_template template on contract.templateid = template.templateId
         where 1 = 1

@@ -7,7 +7,7 @@ import java.util.Map;
 import com.contract.manager.mapper.ContractMapper;
 import com.contract.manager.model.Contract;
 
-import com.contract.manager.model.request.ContractQueryRequest;
+import com.contract.manager.model.request.ContractPageRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,18 +16,14 @@ public class ContractService {
     @Autowired
     ContractMapper contractMapper;
 
-    public List<Contract> selectAll() {
-        return contractMapper.selectAll();
-    }
-
     /**
      * 查询合同列表
      *
-     * @param contract
+     * @param request
      * @return
      */
-    public List<Contract> queryAll(Contract contract) {
-        return contractMapper.queryAll(contract);
+    public List<Contract> query(ContractPageRequest request) {
+        return contractMapper.query(request);
     }
 
     /**
@@ -36,7 +32,7 @@ public class ContractService {
      * @param request
      * @return
      */
-    public List<Contract> queryContract(ContractQueryRequest request) {
+    public List<Contract> queryContract(ContractPageRequest request) {
         return contractMapper.queryContract(request);
     }
 

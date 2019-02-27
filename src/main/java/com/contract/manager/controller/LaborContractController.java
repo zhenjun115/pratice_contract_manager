@@ -4,7 +4,7 @@ import com.contract.manager.configuration.constant.CommonConstant;
 import com.contract.manager.model.*;
 import com.contract.manager.model.request.ContractInfoUpdateRequest;
 import com.contract.manager.model.request.ContractPartyUpdateRequest;
-import com.contract.manager.model.request.ContractQueryRequest;
+import com.contract.manager.model.request.ContractPageRequest;
 import com.contract.manager.model.response.ContractPartyResponse;
 import com.contract.manager.service.ContractFileService;
 import com.contract.manager.service.ContractPartyService;
@@ -307,7 +307,7 @@ public class LaborContractController {
      * @return
      */
     @RequestMapping( "/fetch" )
-    public @ResponseBody Msg fetchAll( @RequestBody ContractQueryRequest request ) {
+    public @ResponseBody Msg fetchAll( @RequestBody ContractPageRequest request ) {
         Contract contract = request.getContract();
         Page page = request.getPage();
 

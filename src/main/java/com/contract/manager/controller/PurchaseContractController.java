@@ -6,7 +6,7 @@ import com.contract.manager.model.Msg;
 import com.contract.manager.model.Page;
 import com.contract.manager.model.PurchaseContract;
 
-import com.contract.manager.model.request.ContractQueryRequest;
+import com.contract.manager.model.request.ContractPageRequest;
 import com.contract.manager.service.ContractService;
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +44,7 @@ public class PurchaseContractController {
      * @return
      */
     @RequestMapping("fetch")
-    public Msg fetch(@RequestBody ContractQueryRequest request) {
+    public Msg fetch(@RequestBody ContractPageRequest request) {
 
         Contract contract = request.getContract();
         Page page = request.getPage();

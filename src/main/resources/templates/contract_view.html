@@ -27,10 +27,17 @@
             <!--<button onclick="javascript:POBrowser.openWindowModeless('/pageoffice/word', 'width=1200px;height=800px;')">Word</button>-->
             <!--<input type="submit" value="Sign Out"/>-->
         <!--</form>-->
-        <button th:data-contractid="${contractId}" id="openContract">
-            特性2：预览合同
-        </button>
+        <!--<button th:data-contractid="${contractId}" id="openContract">-->
+            <!--特性2：预览合同-->
+        <!--</button>-->
 
-        <div th:utext="${templateId}">模版编号：</div>
+        <!--<a href="#" th:data-templateid="${templateId}" id="openTemplate">-->
+
+        <!--</a>-->
+
+        <div style="width: 240px; height: 240px; margin: 0 auto; margin-top: 80px">
+            <a href="#" id="openContract" th:data-contractid="${contractId}"><image src="../img/word.svg" /> </a>
+            [[${contractId}]]
+        </div>
     </body>
 </html>

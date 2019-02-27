@@ -5,7 +5,7 @@ import java.util.Map;
 
 import com.contract.manager.model.Contract;
 
-import com.contract.manager.model.request.ContractQueryRequest;
+import com.contract.manager.model.request.ContractPageRequest;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
@@ -16,12 +16,12 @@ public interface ContractMapper {
 
   /**
    * 查询合同列表
-   * @param contract
+   * @param request
    * @return
    */
-  List<Contract> queryAll(Contract contract );
+  List<Contract> query( ContractPageRequest request );
 
-  List<Contract> queryContract(ContractQueryRequest request);
+  List<Contract> queryContract(ContractPageRequest request);
 
   Contract fetch( Contract contract );
 

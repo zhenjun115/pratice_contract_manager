@@ -17,20 +17,21 @@
 
 
                 $( "#openTemplate" ).click( function() {
-                    // var templateId = $( this ).data( "templateid" );
+                    var templateId = $( this ).data( "templateid" );
                     open( templateId );
                 } );
-
-                setTimeout( function() {
-                    $( "#openTemplate" ).trigger( "click" );
-                }, 600 );
             });
         </script>
     </head>
     <body>
-        <button th:data-templateid="${templateId}" id="openTemplate">
-            特性1：预览合同模版
-        </button>
+        <!--<button th:data-templateid="${templateId}" id="openTemplate">-->
+            <!--特性1：预览合同模版-->
+        <!--</button>-->
+
+        <div style="width: 240px; height: 240px; margin: 0 auto; margin-top: 80px">
+            <a href="#" id="openTemplate" th:data-templateid="${templateId}"><image src="../img/word.svg" /> </a>
+            [[${templateId}]]
+        </div>
 
         <!--<div th:utext="${templateId}">模版编号：</div>-->
     </body>
