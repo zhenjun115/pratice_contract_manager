@@ -11,9 +11,9 @@
                 #{catCode}
             </foreach>
         </if>
-        <if test="keyword != null">
-            and ( title like '%' || #{keyword} || '%' or content like '%' || #{keyword} || '%' )
-        </if>
+        <!--<if test="keyword != null">-->
+            <!--and ( title like '%' || #{keyword} || '%' or content like '%' || #{keyword} || '%' )-->
+        <!--</if>-->
     </select>
 
     <select id="fetchByTemplateId" parameterType="com.contract.manager.model.ContractTemplate" resultType="com.contract.manager.model.ContractTemplate">
