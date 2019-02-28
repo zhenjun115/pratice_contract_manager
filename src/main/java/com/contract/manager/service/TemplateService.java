@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import com.contract.manager.mapper.TemplateMapper;
 import com.contract.manager.model.ContractTemplate;
 
-@Service("purchaseTemplateService")
+@Service("templateService")
 public class TemplateService {
 	
 	@Autowired
