@@ -45,7 +45,8 @@ public class FileUploader {
             Files.write( path, bytes );
             Map<String, Object> result = new HashMap<String, Object>();
             result.put( "filePath", path.toString() );
-            result.put( "fileName", file.getOriginalFilename() );
+            // result.put( "fileName", file.getOriginalFilename() );
+            result.put( "fileName", newFileName );
             result.put( "originalFileName", file.getOriginalFilename() );
             msg.setCode( 200 );
             msg.setContent( "上传成功" );
