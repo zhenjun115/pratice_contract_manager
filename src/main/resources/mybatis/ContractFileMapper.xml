@@ -11,6 +11,11 @@
         select * from contract_file where contractid = #{contractId}
     </select>
 
+    <select id="fetch" parameterType="java.lang.String"
+            resultType="com.contract.manager.model.ContractFile">
+        select * from contract_file where fileId = #{fileId}
+    </select>
+
     <!-- TODO: 根据文件ID删除文件，且为逻辑删除 -->
     <delete id="delFile" parameterType="com.contract.manager.model.ContractFile">
         delete from contract_file where fileid = #{fileId}

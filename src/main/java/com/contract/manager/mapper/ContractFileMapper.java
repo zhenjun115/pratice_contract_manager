@@ -8,6 +8,7 @@ import java.util.List;
 
 @Mapper
 public interface ContractFileMapper {
+    ContractFile fetch( String fileId );
     boolean addFile(ContractFile contractFile);
     boolean delFile(ContractFile contractFile);
     List<ContractFile> fetchFiles(Contract contract);

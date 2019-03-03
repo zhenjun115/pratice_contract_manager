@@ -17,6 +17,10 @@ public class ContractFileService {
         return contractFileMapper.fetchFiles( contract );
     }
 
+    public ContractFile fetch( String fileId ) {
+        return contractFileMapper.fetch( fileId );
+    }
+
     public boolean addFile( ContractFile contractFile ) {
         return contractFileMapper.addFile( contractFile );
     }

@@ -16,4 +16,16 @@ public class CommonConstant {
 
     // 乙方
     public static String PARTY_OTHER = "partyOther";
+
+    // 创建合同流程
+    public static String CONTRACT_CREATE_WORKFLOW = "contractCreateFlow";
+
+    // 更改合同流程
+    public static String CONTRACT_CHANGE_WORKFLOW = "contractChangeFlow";
+
+    // 停止合同流程
+    public static String CONTRACT_STOP_WORKFLOW = "contractStopFlow";
+
+    // 上传相关
+
 }

@@ -8,6 +8,7 @@ import com.contract.manager.mapper.ContractMapper;
 import com.contract.manager.model.Contract;
 
 import com.contract.manager.model.request.ContractPageRequest;
+import com.contract.manager.model.request.ContractWorkflowRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -53,6 +54,14 @@ public class ContractService {
         } else {
             return false;
         }
+    }
+
+    /**
+     * 根据合同编号获取工作流程
+     * @param contractId
+     * @param workflowKey
+     */
+    public void fetchWorkflow( String contractId, String workflowKey) {
     }
 
     public Contract fetchDraft(Contract contract) {

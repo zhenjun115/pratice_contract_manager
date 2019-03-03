@@ -2,6 +2,9 @@ package com.contract.manager.service;
 
 import com.contract.manager.mapper.ActivityMapper;
 import com.contract.manager.model.Activity;
+import org.activiti.engine.TaskService;
+import org.activiti.engine.task.Task;
+import org.activiti.engine.task.TaskQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,8 +15,13 @@ public class ActivityService {
     @Autowired
     ActivityMapper activityMapper;
 
-    public List<Activity> fetch() {
-        return activityMapper.fetch();
+    @Autowired
+    TaskService taskService;
+
+    public List<Task> fetch() {
+        TaskQuery taskQuery = taskService.createTaskQuery();
+        taskQuery = taskQuery.taskAssignee( "admin" );
+        return taskQuery.list();
     }
 
     public List<Activity> fetch( List<String> types ) {

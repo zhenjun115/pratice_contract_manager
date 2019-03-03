@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3" >
+<!--<html>-->
+    <head>
+        <title>Hello World!</title>
+        <script src="/pageoffice/jquery.min.js" ></script>
+        <script src="/pageoffice/pageoffice.js" id="po_js_main"></script>
+        <script>
+            var open = function( fileId ) {
+                // console.log( templateId );
+                POBrowser.openWindowModeless('/pageoffice/contractFile?fileId=' + fileId, 'width=1200px;height=800px;');
+            }
+
+            $( document ).ready( function() {
+                $( "#openContractFile" ).click( function() {
+                    var fileId = $( this ).data( "fileid" );
+                    open( fileId )
+                } );
+            });
+        </script>
+    </head>
+    <body>
+        <!--<h1 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</h1>-->
+        <!--<h1 th:text="${msg}">msg</h1>-->
+        <!--<form th:action="@{/logout}" method="post">-->
+            <!--<button onclick="javascript:POBrowser.openWindowModeless('/pageoffice/word', 'width=1200px;height=800px;')">Word</button>-->
+            <!--<input type="submit" value="Sign Out"/>-->
+        <!--</form>-->
+        <!--<button th:data-contractid="${contractId}" id="openContract">-->
+            <!--特性2：预览合同-->
+        <!--</button>-->
+
+        <!--<a href="#" th:data-templateid="${templateId}" id="openTemplate">-->
+
+        <!--</a>-->
+
+        <div style="width: 240px; height: 240px; margin: 0 auto; margin-top: 80px">
+            <a href="#" id="openContractFile" th:data-fileid="${fileId}"><image src="../img/word.svg" /> </a>
+            [[${fileId}]]
+        </div>
+    </body>
+</html>

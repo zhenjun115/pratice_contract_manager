@@ -5,6 +5,7 @@ import com.contract.manager.model.*;
 import com.contract.manager.model.request.ContractInfoUpdateRequest;
 import com.contract.manager.model.request.ContractPartyUpdateRequest;
 import com.contract.manager.model.request.ContractPageRequest;
+import com.contract.manager.model.request.ContractWorkflowRequest;
 import com.contract.manager.model.response.ContractPartyResponse;
 import com.contract.manager.service.ContractFileService;
 import com.contract.manager.service.ContractPartyService;
@@ -34,6 +35,9 @@ public class LaborContractController {
 
     @Autowired
     private WorkFlowService workFlowService; // 流程服务
+
+    @Autowired
+    private CommonConfig commonConfig;
 
     /**
      * 劳务合同,基于合同模版创建合同
@@ -222,7 +226,7 @@ public class LaborContractController {
     }
 
     /**
-     * 保存合同关联的附件
+     * 上传合同关联的附件
      * @param file
      * @param fileCat
      * @param contractId
@@ -230,8 +234,8 @@ public class LaborContractController {
      */
     @RequestMapping( "/file/add" )
     public @ResponseBody Msg addFile(@RequestParam MultipartFile file, @RequestParam String fileCat, @RequestParam String contractId ) {
-        // TODO: 数据库中添加文件路径信息
-        Msg upload = FileUploader.save( file );
+        Msg upload = FileUploader.save( file, commonConfig.getFileDir() );
+
         ContractFile contractFile = new ContractFile();
 
         if( upload.getCode() == 200 ) {
@@ -335,6 +339,24 @@ public class LaborContractController {
         msg.setContent( "获取成功" );
         msg.setPayload( payload );
 
+        return msg;
+    }
+
+    /**
+     * 根据合同id获取流程状态
+     * @param request
+     * @return
+     */
+    @RequestMapping("/workflow")
+    public @ResponseBody Msg fetchWorkflow( @RequestBody ContractWorkflowRequest request ) {
+        String contractId = request.getContractId();
+        // 获取创建流程
+        contractService.fetchWorkflow( contractId, CommonConstant.CONTRACT_CREATE_WORKFLOW );
+        // 获取变更流程(多个)
+        // contractService.fetchWorkflow();
+        Msg msg = new Msg();
+        msg.setCode( 1 );
+        msg.setPayload( request );
         return msg;
     }
 }

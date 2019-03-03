@@ -29,13 +29,5 @@ public class WorkflowController {
 	 */
 	@RequestMapping("deploy")
     public void deploy() {
-        // 根据bpmn文件部署流程
-//        ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
-//        processEngine
-//        		.getRepositoryService()
-//                .createDeployment()
-//                .name( "劳务合同创建流程" )
-//                .addClasspathResource("processes/ContractCreateFlow.bpmn")
-//                .deploy();
     }
 }
