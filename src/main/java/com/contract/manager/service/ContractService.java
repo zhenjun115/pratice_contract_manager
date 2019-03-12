@@ -62,6 +62,7 @@ public class ContractService {
      * @param workflowKey
      */
     public void fetchWorkflow( String contractId, String workflowKey) {
+        // 获取合同编号关联的流程实例
     }
 
     public Contract fetchDraft(Contract contract) {

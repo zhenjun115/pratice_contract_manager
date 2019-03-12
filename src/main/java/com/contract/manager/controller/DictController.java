@@ -2,6 +2,8 @@ package com.contract.manager.controller;
 
 import com.contract.manager.model.Dict;
 import com.contract.manager.model.Msg;
+import com.contract.manager.model.Page;
+import com.contract.manager.model.request.DictPageRequest;
 import com.contract.manager.service.DictService;
 import com.contract.manager.util.CommonUtil;
 import com.github.pagehelper.PageHelper;
@@ -53,10 +55,14 @@ public class DictController {
     }
 
     @RequestMapping( "/fetch" )
-    public @ResponseBody Msg fetch( @RequestBody Dict dict ) {
-        PageHelper.startPage( 1, 5 );
-        List<Dict> payload = dictService.fetchList( dict );
-        //TODO: 增加分页操作
+    public @ResponseBody Msg fetch( @RequestBody DictPageRequest dictPageRequest ) {
+        String keyword = dictPageRequest.getKeyword();
+        Page page = dictPageRequest.getPage();
+
+        PageHelper.startPage( page.getPageIndex(), page.getPageSize() );
+        // List<Dict> payload = dictService.fetchList( dictPageRequest );
+        List<Dict> payload = dictService.fetchList( null );
+
         return new Msg( 1, "字典列表",payload);
     }
 

@@ -3,8 +3,8 @@ package com.contract.manager.controller;
 import com.contract.manager.configuration.constant.CommonConstant;
 import com.contract.manager.model.*;
 import com.contract.manager.model.request.ContractInfoUpdateRequest;
-import com.contract.manager.model.request.ContractPartyUpdateRequest;
 import com.contract.manager.model.request.ContractPageRequest;
+import com.contract.manager.model.request.ContractPartyUpdateRequest;
 import com.contract.manager.model.request.ContractWorkflowRequest;
 import com.contract.manager.model.response.ContractPartyResponse;
 import com.contract.manager.service.ContractFileService;
@@ -14,6 +14,11 @@ import com.contract.manager.service.WorkFlowService;
 import com.contract.manager.util.CommonUtil;
 import com.contract.manager.util.FileUploader;
 import com.github.pagehelper.PageHelper;
+import org.activiti.engine.HistoryService;
+import org.activiti.engine.TaskService;
+import org.activiti.engine.history.HistoricTaskInstance;
+import org.activiti.engine.runtime.ProcessInstance;
+import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -34,10 +39,16 @@ public class LaborContractController {
     private ContractFileService contractFileService;
 
     @Autowired
-    private WorkFlowService workFlowService; // 流程服务
+    private CommonConfig commonConfig;
 
     @Autowired
-    private CommonConfig commonConfig;
+    TaskService taskService;
+
+    @Autowired
+    HistoryService historyService;
+
+    @Autowired
+    WorkFlowService workFlowService;
 
     /**
      * 劳务合同,基于合同模版创建合同
@@ -343,20 +354,65 @@ public class LaborContractController {
     }
 
     /**
-     * 根据合同id获取流程状态
+     * 根据合同id获取合同创建流程
      * @param request
      * @return
      */
     @RequestMapping("/workflow")
     public @ResponseBody Msg fetchWorkflow( @RequestBody ContractWorkflowRequest request ) {
-        String contractId = request.getContractId();
-        // 获取创建流程
-        contractService.fetchWorkflow( contractId, CommonConstant.CONTRACT_CREATE_WORKFLOW );
+
+        String actId = workFlowService.queryProcessIdByContractId( request.getContractId() );
+        // TODO: 获取创建流程
+        // contractService.fetchWorkflow( contractId, CommonConstant.CONTRACT_CREATE_WORKFLOW );
+
+        // 获取流程信息
+        ProcessInstance instance = workFlowService.queryInstanceByProcessInstanceId( actId );
+
+        // 历史任务列表
+        List<HistoricTaskInstance> hisTaskList =
+                historyService.createHistoricTaskInstanceQuery().processInstanceId(actId).finished().list();
+
+        // 正在执行的任务列表
+        List<Task> taskList = taskService.createTaskQuery().processInstanceId( actId ).list();
+
+        Map<String,Object> workflow = new HashMap<>();
+        workflow.put( "name", instance.getName() );
+        workflow.put( "startTime", instance.getStartTime() );
+        workflow.put( "userId", instance.getStartUserId() );
+
+        for( HistoricTaskInstance hisTask: hisTaskList ) {
+            Map<String,Object> item = new HashMap<String,Object>();
+            item.put( "assignee", hisTask.getAssignee() );
+            item.put( "startTime", hisTask.getStartTime() );
+            item.put( "id", hisTask.getId() );
+            item.put( "taskDefKey", hisTask.getTaskDefinitionKey() );
+
+            workflow.put( hisTask.getTaskDefinitionKey(), item );
+        }
+
+        // List<Map<String,Object>> taskMapList = new ArrayList<Map<String,Object>>();
+        for( Task task : taskList ) {
+            Map<String,Object> item = new HashMap<String,Object>();
+            item.put( "assignee", task.getAssignee() );
+            item.put( "name", task.getName() );
+            item.put( "id", task.getId() );
+            item.put( "taskDefKey", task.getTaskDefinitionKey() );
+            // taskMapList.add( item );
+
+            workflow.put( task.getTaskDefinitionKey(), item );
+        }
+
+        // 返回流程信息
+        // Map<String,Object> resultMap = new HashMap<String,Object>();
+        // resultMap.put( "hisTaskList", hisTaskList );
+        // resultMap.put( "taskList", taskMapList );
+        // resultMap.put( "workflow", workflow );
         // 获取变更流程(多个)
-        // contractService.fetchWorkflow();
+
         Msg msg = new Msg();
         msg.setCode( 1 );
-        msg.setPayload( request );
+        msg.setPayload( workflow );
+
         return msg;
     }
 }

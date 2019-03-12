@@ -1,18 +1,13 @@
 package com.contract.manager.controller;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.contract.manager.configuration.constant.CommonConstant;
 import com.contract.manager.model.*;
 import com.contract.manager.model.request.TemplatePageRequest;
 import com.contract.manager.service.TemplateParamService;
 import com.contract.manager.service.TemplateService;
+import com.contract.manager.service.WorkFlowService;
 import com.contract.manager.util.CommonUtil;
-
 import com.contract.manager.util.FileUploader;
-import com.contract.manager.util.POIUtil;
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,6 +16,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 @RestController
 @RequestMapping( "/purchase/template" )
 public class PurchaseTemplateController {
@@ -28,22 +27,29 @@ public class PurchaseTemplateController {
     @Autowired
     TemplateService templateService;
 
-    @Autowired
-    TemplateParamService templateParamService;
+//    @Autowired
+//    TemplateParamService templateParamService;
 
     @Autowired
     CommonConfig commonConfig;
 
+    @Autowired
+    WorkFlowService workFlowService;
+
     /**
-     * 上传采购模版
-     * @return
+     * 新增采购模版
+     * @param template 模版实体类
+     * @return Msg 操作结果
      */
     @RequestMapping("add")
     public Msg add( @RequestBody Template template ) {
         template.setTemplateId( CommonUtil.randomUUID() );
         template.setCatCode( CommonConstant.CATCODE_PURCHASE );
         boolean added = templateService.add( template );
-        
+
+        String processId = workFlowService.startProcess( CommonConstant.TEMPLATE_PUCHASE_CREATE_WORKFLOW );
+        templateService.saveWorkflow( processId, template.getTemplateId() );
+
         Msg msg = new Msg();
         msg.setCode( 1 );
         msg.setContent( "上传采购模版: " + added );
@@ -117,19 +123,19 @@ public class PurchaseTemplateController {
         return msg;
     }
 
-    @RequestMapping( "fetchParamsByTemplateId" )
-    public Msg fetchParamsByTemplateId(@RequestBody HashMap<String,Object> params) {
-        String templateId = (String)params.get( "templateId" );
-        Template template = templateService.fetchByTemplateId( templateId );
-
-        List<TemplateParam> officePlaceholders = templateParamService.fetchByFilePath( commonConfig.getTemplateDir() + template.getFileName() );
-
-        Msg msg = new Msg();
-        msg.setCode( 1 );
-        msg.setContent( "获取模版参数成功成功" );
-        msg.setPayload( officePlaceholders );
-        return msg;
-    }
+//    @RequestMapping( "fetchParamsByTemplateId" )
+//    public Msg fetchParamsByTemplateId(@RequestBody HashMap<String,Object> params) {
+//        String templateId = (String)params.get( "templateId" );
+//        Template template = templateService.fetchByTemplateId( templateId );
+//
+//        List<TemplateParam> officePlaceholders = templateParamService.fetchByFilePath( commonConfig.getTemplateDir() + template.getFileName() );
+//
+//        Msg msg = new Msg();
+//        msg.setCode( 1 );
+//        msg.setContent( "获取模版参数成功成功" );
+//        msg.setPayload( officePlaceholders );
+//        return msg;
+//    }
 
     /**
      * 上传合同模版文件
@@ -167,4 +173,6 @@ public class PurchaseTemplateController {
         msg.setPayload( null );
         return msg;
     }
+
+
 }

@@ -94,7 +94,7 @@ public class PageOfficeController {
         String fileId = request.getParameter( "fileId" );
         ContractFile contractFile = contractFileService.fetch( fileId );
         //--- PageOffice的调用代码 开始 -----
-        PageOfficeCtrl poCtrl=new PageOfficeCtrl(request);
+        PageOfficeCtrl poCtrl=new PageOfficeCtrl( request );
         poCtrl.setServerPage( "/pageoffice/poserver.zz" );//设置授权程序servlet
         poCtrl.addCustomToolButton("保存","Save",1 ); //添加自定义按钮
         // TODO: 合同附件的保存按钮

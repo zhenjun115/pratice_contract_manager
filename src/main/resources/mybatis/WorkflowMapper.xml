@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//com.order.test.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.contract.manager.mapper.WorkflowMapper">
+
+    <!-- 根据合同ID查询流程实例信息 -->
+    <select id="queryProcessIdByContractId" parameterType="java.lang.String"
+            resultType="java.lang.String">
+        select act_id from rel_contract_act where contractid = #{contractId}
+    </select>
+    
+</mapper>

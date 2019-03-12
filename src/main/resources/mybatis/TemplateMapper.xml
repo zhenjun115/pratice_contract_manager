@@ -51,4 +51,8 @@
     <select id="fetchByTemplateId" parameterType="java.lang.String" resultType="com.contract.manager.model.Template">
         select * from contract_template where templateId = #{templateId}
     </select>
+
+    <insert id="saveWorkflow" parameterType="java.util.Map">
+        insert into rel_template_process( templateid, processid ) values( #{templateId,jdbcType=VARCHAR}, #{processId,jdbcType=VARCHAR} )
+    </insert>
 </mapper>

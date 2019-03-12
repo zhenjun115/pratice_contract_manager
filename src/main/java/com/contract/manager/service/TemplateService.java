@@ -1,5 +1,6 @@
 package com.contract.manager.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -43,5 +44,18 @@ public class TemplateService {
 	 */
 	public List<Template> queryByKeyword( Map<String,Object> params ) {
 		return templateMapper.queryByKeyword( params );
+	}
+
+	/**
+	 * 保存流程信息
+	 * @param processId 流程实例id
+	 * @param templateId 模版id
+	 * @return
+	 */
+	public void saveWorkflow( String processId, String templateId ) {
+		Map<String,Object> param = new HashMap<String,Object>();
+		param.put( "processId", processId );
+		param.put( "templateId", templateId );
+		templateMapper.saveWorkflow( param );
 	}
 }

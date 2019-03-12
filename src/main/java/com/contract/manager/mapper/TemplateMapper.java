@@ -23,4 +23,6 @@ public interface TemplateMapper {
 	List<Template> queryByKeyword( Map<String,Object> params );
 
 	Template fetchByTemplateId(String templateId);
+
+	void saveWorkflow( Map<String,Object> param );
 }

@@ -1,40 +1,41 @@
 package com.contract.manager.service;
 
-//import org.activiti.bpmn.model.BpmnModel;
-//import org.activiti.bpmn.model.GraphicInfo;
-//import org.activiti.bpmn.model.Process;
-//import org.activiti.engine.ProcessEngine;
-//import org.activiti.engine.RepositoryService;
-//import org.activiti.engine.impl.util.ProcessDefinitionUtil;
-//import org.activiti.engine.repository.ProcessDefinition;
-//import org.activiti.engine.runtime.ProcessInstance;
-//import org.activiti.engine.task.Task;
-//import org.springframework.beans.factory.annotation.Autowired;
+import com.contract.manager.mapper.WorkflowMapper;
+import org.activiti.engine.IdentityService;
+import org.activiti.engine.ProcessEngine;
+import org.activiti.engine.RuntimeService;
+import org.activiti.engine.runtime.ProcessInstance;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Service( "workFlowService" )
 public class WorkFlowService {
 	
-//	@Autowired
-//	ProcessEngine processEngine;
-//
-//	@Autowired
-//	RepositoryService repositoryService;
-//
-//	/**
-//	 * 启动流程
-//	 * @param workFlowKey
-//	 */
-//	public void startProcess(String workFlowKey, String userName ) {
-//		Map<String,Object> variables = new HashMap<String,Object>();
-//		variables.put( "user", userName );
-//		ProcessInstance processInstance = processEngine.getRuntimeService().startProcessInstanceByKey( workFlowKey, variables );
-//		// processInstance.get
-//	}
+	@Autowired
+    ProcessEngine processEngine;
+
+    @Autowired
+    WorkflowMapper workflowMapper;
+
+    @Autowired
+    RuntimeService runtimeService;
+
+    @Autowired
+    IdentityService identityService;
+
+	/**
+	 * 启动流程
+	 * @param workFlowKey
+	 */
+	public String startProcess( String workFlowKey ) {
+		// TODO: 默认管理员
+        identityService.setAuthenticatedUserId("admin");
+		ProcessInstance processInstance = runtimeService.startProcessInstanceByKey( workFlowKey );
+		return processInstance.getProcessInstanceId();
+	}
 //
 //	/**
 //	 * 根据任务编号完成任务
@@ -78,4 +79,23 @@ public class WorkFlowService {
 //		// process.getFlowElements();
 //		return bpmnModelLocationMap;
 //	}
+
+    /**
+     * 根据合同ID获取流程信息
+     * @param contractId
+     * @return 获取流程
+     */
+    public String queryProcessIdByContractId( String contractId ) {
+        return workflowMapper.queryProcessIdByContractId( contractId );
+    }
+
+    /**
+     * 根据流程ID获取基本信息
+     * @param processInstanceId
+     * @return 流程基本信息
+     */
+    public ProcessInstance queryInstanceByProcessInstanceId( String processInstanceId ) {
+        ProcessInstance instance = runtimeService.createProcessInstanceQuery().processInstanceId( processInstanceId ).singleResult();
+        return instance;
+    }
 }

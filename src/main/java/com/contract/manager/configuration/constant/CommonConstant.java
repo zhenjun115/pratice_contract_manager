@@ -26,6 +26,7 @@ public class CommonConstant {
     // 停止合同流程
     public static String CONTRACT_STOP_WORKFLOW = "contractStopFlow";
 
-    // 上传相关
+    // 采购合同模版流程key
+    public static String TEMPLATE_PUCHASE_CREATE_WORKFLOW = "purchaseTemplateCreateFlow";
 
 }

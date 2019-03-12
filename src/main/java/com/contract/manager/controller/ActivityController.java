@@ -4,9 +4,7 @@ import com.contract.manager.model.Activity;
 import com.contract.manager.model.Contract;
 import com.contract.manager.model.Msg;
 import com.contract.manager.service.ActivityService;
-import com.contract.manager.util.JwtTokenUtil;
 import org.activiti.engine.IdentityService;
-import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
@@ -16,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping( "/activity" )
@@ -78,9 +77,12 @@ public class ActivityController {
      */
     @RequestMapping( "process" )
     public @ResponseBody Msg fetchProcess( @RequestBody Contract contract ) {
+        Map<String,Object> payload =
+                activityService.queryProcessByContractId( contract.getContractId() );
         Msg msg = new Msg();
         msg.setCode( 1 );
-        msg.setContent( "" );
+        msg.setContent( "获取成功" );
+        msg.setPayload( payload );
 
         return msg;
     }
