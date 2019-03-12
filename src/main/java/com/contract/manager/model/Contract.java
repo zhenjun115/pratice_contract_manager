@@ -32,4 +32,6 @@ public class Contract {
 	private String catCode;
 
 	private String keyword;
+
+	private String filePath;
 }

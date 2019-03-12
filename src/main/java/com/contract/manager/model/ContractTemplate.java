@@ -12,4 +12,5 @@ public class ContractTemplate {
     private String last_modified_time;
     private String templateId;
     private String fileName;
+    private String filePath;
 }

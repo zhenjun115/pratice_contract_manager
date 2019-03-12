@@ -76,7 +76,7 @@
     </update>
 
     <insert id="save" parameterType="java.util.HashMap">
-        insert into contract( contractid, conname, templateid ) values ( #{contractId}, #{contractName}, #{templateId} )
+        insert into contract( contractid, conname, templateid, filePath ) values ( #{contractId}, #{contractName}, #{templateId}, #{filePath} )
     </insert>
 
     <update id="saveInfo" parameterType="com.contract.manager.model.Contract">

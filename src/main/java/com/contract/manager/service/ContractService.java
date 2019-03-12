@@ -78,10 +78,11 @@ public class ContractService {
         }
     }
 
-    public boolean save(String contractId, String contractName, String templateId) {
+    public boolean save(String contractId, String contractName, String contractFilePath, String templateId) {
         Map<String, Object> contract = new HashMap<String, Object>();
         contract.put("contractId", contractId);
         contract.put("contractName", contractName);
+        contract.put("filePath", contractFilePath);
         contract.put("templateId", templateId);
         long saved = contractMapper.save(contract);
         return saved > 0 ? true : false;

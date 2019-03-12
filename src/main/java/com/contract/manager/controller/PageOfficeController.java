@@ -52,8 +52,8 @@ public class PageOfficeController {
         poCtrl.setServerPage("/pageoffice/poserver.zz");//设置授权程序servlet
         // poCtrl.addCustomToolButton("保存","Save",1); //添加自定义按钮
         // poCtrl.setSaveFilePage("/pageoffice/save");//设置保存的action
-        poCtrl.webOpen(template.getFileName(), OpenModeType.docNormalEdit,"");
-        map.put("pageoffice",poCtrl.getHtmlCode("PageOfficeCtrl1"));
+        poCtrl.webOpen( template.getFilePath(), OpenModeType.docNormalEdit,"" );
+        map.put( "pageoffice",poCtrl.getHtmlCode("PageOfficeCtrl1") );
         //--- PageOffice的调用代码 结束 -----
         ModelAndView mv = new ModelAndView("Word");
         mv.addAllObjects( map );
@@ -75,7 +75,7 @@ public class PageOfficeController {
         poCtrl.setServerPage( "/pageoffice/poserver.zz" );//设置授权程序servlet
         poCtrl.addCustomToolButton("保存","Save",1 ); //添加自定义按钮
         poCtrl.setSaveFilePage( "/interface/contract/save" );//设置保存的action
-        poCtrl.webOpen( contract.getConname(), OpenModeType.docNormalEdit,"");
+        poCtrl.webOpen( contract.getFilePath(), OpenModeType.docNormalEdit,"");
         map.put("pageoffice",poCtrl.getHtmlCode("PageOfficeCtrl1"));
         //--- PageOffice的调用代码 结束 -----
         ModelAndView mv = new ModelAndView("Word");
@@ -98,7 +98,7 @@ public class PageOfficeController {
         poCtrl.setServerPage( "/pageoffice/poserver.zz" );//设置授权程序servlet
         poCtrl.addCustomToolButton("保存","Save",1 ); //添加自定义按钮
         // TODO: 合同附件的保存按钮
-        poCtrl.setSaveFilePage( "/interface/contract/save" );//设置保存的action
+        // poCtrl.setSaveFilePage( "/interface/contract/save" );//设置保存的action
         poCtrl.webOpen( contractFile.getFilePath(), OpenModeType.docNormalEdit,"");
         map.put("pageoffice",poCtrl.getHtmlCode("PageOfficeCtrl1"));
         //--- PageOffice的调用代码 结束 -----
@@ -133,4 +133,6 @@ public class PageOfficeController {
         modelAndView.addAllObjects( dataObjects );
         return modelAndView;
     }
+
+
 }

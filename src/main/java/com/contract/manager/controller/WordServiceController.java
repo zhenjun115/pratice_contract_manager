@@ -53,6 +53,7 @@ public class WordServiceController {
         Msg msg = new Msg();
         msg.setCode( 1 );
         msg.setContent( "获取成功" );
+
         List<String> catCodes = (List<String>)params.get( "catCodes" );
         List<ContractTemplate> templates = templateService.fetch( catCodes );
         msg.setPayload( templates );
@@ -125,23 +126,23 @@ public class WordServiceController {
 
         // 2.生成合同文件
         String templateFileName = template.getFileName();
-        String contractFileName = generateContractFileNameWithSuffix( template.getFileName(), contractId );
-        String templatePath = commonConfig.getTemplateDir() + templateFileName;
-        String contractPath = commonConfig.getContractDir() + contractFileName ;
-        File contractFile = CommonUtil.copyFile( templatePath, contractPath );
+        String contractPath = generateContractFilePathWithSuffix( templateFileName, contractId );
+        String templatePath = commonConfig.getTemplateDir() + template.getFilePath();
+        String contractFileName = contractId + "_" + templateFileName;
+        CommonUtil.copyFile( templatePath, commonConfig.getContractDir() + contractPath );
 
         // 3.替换合同文件中的模版
         Map<String,String> datas = ( HashMap<String,String> ) params.get( "datas" );
 
-        POIUtil.generateDocWithDatas(datas, new File( contractPath ) );
+        POIUtil.generateDocWithDatas(datas, new File( commonConfig.getContractDir() + contractPath ) );
 
         // 4.保存合同到数据库
-        contractService.save( contractId, contractFileName, templateId );
+        contractService.save( contractId, contractFileName, contractPath, templateId );
 
         // 6.返回合同编号和预览地址
         Msg msg = new Msg();
         msg.setCode( 1 );
-        msg.setContent( "生成模版成功" );
+        msg.setContent( "生成合同成功" );
         msg.setPayload( contractId );
 
         return msg;
@@ -192,9 +193,9 @@ public class WordServiceController {
         return msg;
     }
 
-    private String generateContractFileNameWithSuffix( String templateName, String suffix ) {
+    private String generateContractFilePathWithSuffix(String templateName, String suffix ) {
         String[] templateProperties = templateName.split( "\\." );
         // String uuid = UUID.randomUUID().toString().replace( "-", "");
-        return templateProperties[0] + "_" + suffix + "." + templateProperties[1];
+        return suffix + "." + templateProperties[1];
     }
 }
