@@ -1,25 +1,14 @@
 package com.contract.manager.util;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import com.contract.manager.model.OfficePlaceholder;
 import org.apache.poi.ooxml.POIXMLProperties;
 import org.apache.poi.util.IOUtils;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.apache.poi.xwpf.usermodel.XWPFParagraph;
-import org.apache.poi.xwpf.usermodel.XWPFRun;
-import org.apache.poi.xwpf.usermodel.XWPFTable;
-import org.apache.poi.xwpf.usermodel.XWPFTableCell;
-import org.apache.poi.xwpf.usermodel.XWPFTableRow;
-import org.apache.tomcat.util.buf.StringUtils;
-import org.apache.xmlbeans.impl.regex.Match;
+import org.apache.poi.xwpf.usermodel.*;
+
+import java.io.*;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class POIUtil
 {
