@@ -23,7 +23,7 @@ import org.apache.xmlbeans.impl.regex.Match;
 
 public class POIUtil
 {
-    public static void generateDocWithDatas(Map<String, String> datas, File file) {
+    public static void generateDocWithDatas(Map<String, Object> datas, File file) {
         try {
             FileInputStream source = new FileInputStream(file);
             XWPFDocument doc = new XWPFDocument( source );
@@ -42,30 +42,48 @@ public class POIUtil
                     replacePlaceholder( p, item, datas );
                 }
             }
-            // TODO: 处理doc中的table
-//            for (XWPFTable tbl : doc.getTables()) {
-//               for (XWPFTableRow row : tbl.getRows()) {
-//                  for (XWPFTableCell cell : row.getTableCells()) {
-//                     for (XWPFParagraph p : cell.getParagraphs()) {
-//                        for (XWPFRun r : p.getRuns()) {
-//                            String text = r.getText(0);
-//                            for ( Map.Entry<String,String> entry:datas.entrySet() ) {
-//                                if (text != null && text.contains(entry.getKey())) {
-//                                    text = text.replace(entry.getKey(), entry.getValue());
-//                                    r.setText(text, 0);
-//                                }
-//                            }
-//                        }
-//                     }
-//                  }
-//               }
-//            }
+
+            // 批量生成table数据
+            // 取得table
+            List<XWPFTable> tables = doc.getTables();
+            // 取得填充数据
+//            List<List<String>> tableDatas = new LinkedList<List<String>>();
+//            List<String> row1Data = new LinkedList<String>() {{
+//                add( "产品名称1" );
+//                add( "产地1" );
+//                add( "品牌1" );
+//                add( "包装1" );
+//                add( "价格1" );
+//                add( "交货地点1" );
+//                add( "交货数量1" );
+//            }};
+//            List<String> row2Data = new LinkedList<String>() {{
+//                add( "产品名称2" );
+//                add( "产地2" );
+//                add( "品牌2" );
+//                add( "包装2" );
+//                add( "价格2" );
+//                add( "交货地点2" );
+//                add( "交货数量2" );
+//            }};
+//            tableDatas.add( row1Data );
+//            tableDatas.add( row2Data );
+
+            List< List<List<String>> > tableDatas = ( List< List< List<String> > > )datas.get( "tableColl" );
+
+            if( tables != null && tables.size() > 0 && tableDatas != null && tableDatas.size() > 0 ) {
+                // 获取到传输过来的table数据
+                List<XWPFTable> templateTableList = doc.getTables();
+                // TODO: 判断边界值
+                for( int i = 0; i < templateTableList.size(); i++ ) {
+                    replaceTable( templateTableList.get(i), tableDatas.get( i ) );
+                }
+            }
+
             doc.write( new FileOutputStream( file ) );
         } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
 		} catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
 		}
     }
@@ -149,7 +167,7 @@ public class POIUtil
 
                 // 替换占位符
                 for( List<XWPFRun> item : result ) {
-                    Map<String,String> params = new HashMap<String,String>();
+                    Map<String,Object> params = new HashMap<String,Object>();
                     params.put( "testName", "testName" );
                     replacePlaceholder( p, item, params );
                 }
@@ -216,7 +234,7 @@ public class POIUtil
      * @param params
      * @return
      */
-    private static void replacePlaceholder( XWPFParagraph paragraph, List<XWPFRun> runs, Map<String,String> params ) {
+    private static void replacePlaceholder( XWPFParagraph paragraph, List<XWPFRun> runs, Map<String,Object> params ) {
 
         // 获取文本值
         String text = "";
@@ -233,10 +251,10 @@ public class POIUtil
         text = tmpText;
 
         // 将所有匹配到的占位符替换掉
-        for (Map.Entry<String, String> entry : params.entrySet()) {
+        for (Map.Entry<String, Object> entry : params.entrySet()) {
             // 将所有符合regex规则的字符串替换掉
             String regex = "\\$\\{.*\\s*,*key=" + entry.getKey().trim() + "\\s*,*.*\\}";
-            tmpText = tmpText.replaceAll( regex, entry.getValue() );
+            tmpText = tmpText.replaceAll( regex, entry.getValue().toString() );
         }
 
         // 如果没有发生替换
@@ -251,6 +269,65 @@ public class POIUtil
         // 删除旧文本
         for( XWPFRun run : runs ) {
             paragraph.removeRun( paragraph.getRuns().indexOf( run ) );
+        }
+    }
+
+    /**
+     * 将数据填充到table中
+     *
+     */
+    private static void replaceTable( XWPFTable xwpfTable, List<List<String>> dataList ) {
+        // 模版行
+        // table中第0行为表头
+        XWPFTableRow templateRow = xwpfTable.getRow( 1 );
+
+        for( int i = 0; i < dataList.size(); i++ ) {
+            // 创建一行
+            XWPFTableRow contentRow = xwpfTable.insertNewTableRow( i + 2 );
+            replaceTableRow( templateRow, contentRow, dataList.get(i) );
+        }
+
+        if( xwpfTable.getRows().size() > 2 ) {
+            xwpfTable.removeRow( 1 );
+        }
+    }
+
+    /**
+     * 将数据填充到table中
+     * @param
+     * @return tableData 填充到table中的数据
+     */
+    private static void replaceTableRow( XWPFTableRow templateRow, XWPFTableRow contentRow, List<String> rowData ) {
+        //复制行属性
+        contentRow.getCtRow().setTrPr(templateRow.getCtRow().getTrPr());
+        List<XWPFTableCell> cellList = templateRow.getTableCells();
+        if (null == cellList) {
+            return;
+        }
+
+        //复制列及其属性和内容
+        XWPFTableCell contentCell = null, templateCell = null;
+        List<XWPFTableCell> templateCellList = templateRow.getTableCells();
+
+        // TODO: 增加鲁棒
+        for( int i = 0; i < templateCellList.size(); i++ ) {
+            templateCell = templateCellList.get( i );
+            contentCell = contentRow.addNewTableCell();
+            //列属性
+            contentCell.getCTTc().setTcPr( templateCell.getCTTc().getTcPr());
+            //段落属性
+            if ( templateCell.getParagraphs() != null &&  templateCell.getParagraphs().size() > 0) {
+                contentCell.getParagraphs().get(0).getCTP().setPPr( templateCell.getParagraphs().get(0).getCTP().getPPr());
+                if ( templateCell.getParagraphs().get(0).getRuns() != null &&  templateCell.getParagraphs().get(0).getRuns().size() > 0) {
+                    XWPFRun cellR = contentCell.getParagraphs().get(0).createRun();
+                    cellR.setText( rowData.get(i) );
+                    cellR.setBold( templateCell.getParagraphs().get(0).getRuns().get(0).isBold());
+                } else {
+                    contentCell.setText( rowData.get( i ) );
+                }
+            } else {
+                contentCell.setText( rowData.get( i ) );
+            }
         }
     }
 }

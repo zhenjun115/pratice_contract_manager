@@ -132,7 +132,7 @@ public class WordServiceController {
         CommonUtil.copyFile( templatePath, commonConfig.getContractDir() + contractPath );
 
         // 3.替换合同文件中的模版
-        Map<String,String> datas = ( HashMap<String,String> ) params.get( "datas" );
+        Map<String,Object> datas = ( HashMap<String,Object> ) params.get( "datas" );
 
         POIUtil.generateDocWithDatas(datas, new File( commonConfig.getContractDir() + contractPath ) );
 
@@ -158,7 +158,7 @@ public class WordServiceController {
         String contractPath = commonConfig.getContractDir() + contract.getConname();
 
         // 3.替换合同文件中的模版
-        Map<String,String> datas = ( HashMap<String,String> ) params.get( "datas" );
+        Map<String,Object> datas = ( HashMap<String,Object> ) params.get( "datas" );
 
         POIUtil.generateDocWithDatas(datas, new File( contractPath ) );
 
