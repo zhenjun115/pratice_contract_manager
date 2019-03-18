@@ -1,7 +1,10 @@
 package com.contract.manager.configuration;
 
+import com.contract.manager.model.CommonConfig;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
@@ -9,6 +12,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 public class WebConfiguration extends WebMvcConfigurerAdapter
 {
     private String allowedOrigins = "*";
+
+    @Autowired
+    CommonConfig commonConfig;
+
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry
@@ -26,5 +33,12 @@ public class WebConfiguration extends WebMvcConfigurerAdapter
 //        registry.addViewController("/").setViewName("home");
 //        registry.addViewController("/hello").setViewName("hello");
 //        registry.addViewController("/login").setViewName("login");
+    }
+
+    @Override
+    public void addResourceHandlers( ResourceHandlerRegistry registry ) {
+        // TODO: 区分对待
+        registry.addResourceHandler("/pageoffice/**" ).addResourceLocations( "file:" + commonConfig.getContractDir() );
+        // super.addResourceHandlers( registry );
     }
 }

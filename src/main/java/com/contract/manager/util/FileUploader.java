@@ -40,11 +40,11 @@ public class FileUploader {
 
         try {
             byte[] bytes = file.getBytes();
-            String newFileName = System.currentTimeMillis() + "." + file.getOriginalFilename().split( "\\." )[1];
+            String newFileName = CommonUtil.randomUUID() + "." + file.getOriginalFilename().split( "\\." )[1];
             Path path = Paths.get(folder + newFileName );
             Files.write( path, bytes );
             Map<String, Object> result = new HashMap<String, Object>();
-            result.put( "filePath", path.toString() );
+            result.put( "filePath", newFileName );
             // result.put( "fileName", file.getOriginalFilename() );
             result.put( "fileName", newFileName );
             result.put( "originalFileName", file.getOriginalFilename() );
