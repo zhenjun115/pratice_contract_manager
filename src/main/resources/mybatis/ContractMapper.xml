@@ -82,4 +82,8 @@
     <update id="saveInfo" parameterType="com.contract.manager.model.Contract">
         update contract set conname = #{conname}, description = #{description} where contractid = #{contractId}
     </update>
+
+    <delete id="delContract" parameterType="com.contract.manager.model.Contract">
+        delete from contract where contractid = #{contractId}
+    </delete>
 </mapper>

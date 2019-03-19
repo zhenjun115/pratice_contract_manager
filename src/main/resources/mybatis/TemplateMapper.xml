@@ -3,9 +3,9 @@
 <mapper namespace="com.contract.manager.mapper.TemplateMapper">
 
     <insert id="add" parameterType="com.contract.manager.model.Template">
-        insert into contract_template ( templateId, title, content, cat_code, fileName ) 
+        insert into contract_template ( templateId, title, content, cat_code, fileName, filepath )
         values
-        ( #{templateId}, #{name}, #{desc}, #{catCode}, #{file} )
+        ( #{templateId}, #{name}, #{desc}, #{catCode}, #{file}, #{filePath} )
     </insert>
 
 	<!-- 根据模版代号获取模版 -->

@@ -34,4 +34,6 @@ public interface ContractMapper {
   long save( Map<String,Object> contact );
 
   boolean saveInfo( Contract contract );
+
+  boolean delContract(Contract contract);
 }

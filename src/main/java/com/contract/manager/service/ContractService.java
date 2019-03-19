@@ -92,4 +92,8 @@ public class ContractService {
         return contractMapper.saveInfo( contract );
     }
 
+    public boolean removeContract( Contract contract ) {
+        return contractMapper.delContract( contract );
+    }
+
 }

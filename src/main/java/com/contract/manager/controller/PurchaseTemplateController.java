@@ -47,8 +47,8 @@ public class PurchaseTemplateController {
         template.setCatCode( CommonConstant.CATCODE_PURCHASE );
         boolean added = templateService.add( template );
 
-        String processId = workFlowService.startProcess( CommonConstant.TEMPLATE_PUCHASE_CREATE_WORKFLOW );
-        templateService.saveWorkflow( processId, template.getTemplateId() );
+        // String processId = workFlowService.startProcess( CommonConstant.TEMPLATE_PUCHASE_CREATE_WORKFLOW );
+        // templateService.saveWorkflow( processId, template.getTemplateId() );
 
         Msg msg = new Msg();
         msg.setCode( 1 );

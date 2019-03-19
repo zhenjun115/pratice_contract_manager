@@ -23,6 +23,8 @@ public class Template {
 
 	private String fileName;
 
+	private String filePath;
+
 	// 分页信息
 	private Page page;
 }

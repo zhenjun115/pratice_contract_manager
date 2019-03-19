@@ -155,21 +155,65 @@ public class WordServiceController {
         // 1.从db中读取合同信息
         Contract contract = contractService.fetch( contractId );
 
-        String contractPath = commonConfig.getContractDir() + contract.getConname();
+        // 2.重新生成一份合同
+        String templateId = contract.getTemplateId();
+        // String contractId = contract.getContractId();
+
+        // 1.从db中读取模版信息
+        ContractTemplate template = templateService.fetchByTemplateId( templateId );
+
+        // 2.生成合同文件
+        String templateFileName = template.getFileName();
+        String contractPath = generateContractFilePathWithSuffix( templateFileName, contractId );
+        String templatePath = commonConfig.getTemplateDir() + template.getFilePath();
+        String contractFileName = contractId + "_" + templateFileName;
+        CommonUtil.copyFile( templatePath, commonConfig.getContractDir() + contractPath );
 
         // 3.替换合同文件中的模版
         Map<String,Object> datas = ( HashMap<String,Object> ) params.get( "datas" );
 
-        POIUtil.generateDocWithDatas(datas, new File( contractPath ) );
+        POIUtil.generateDocWithDatas(datas, new File( commonConfig.getContractDir() + contractPath ) );
+
+        // 4.保存合同到数据库
+        contractService.removeContract( contract );
+        contractService.save( contractId, contractFileName, contractPath, templateId );
+
+        // String contractPath = commonConfig.getContractDir() + contract.getConname();
+
+        // 3.替换合同文件中的模版
+        // Map<String,Object> datas = ( HashMap<String,Object> ) params.get( "datas" );
+
+        // POIUtil.generateDocWithDatas(datas, new File( contractPath ) );
 
         // 6.返回合同编号和预览地址
         Msg msg = new Msg();
         msg.setCode( 1 );
-        msg.setContent( "更新模版成功" );
+        msg.setContent( "更新合同成功" );
         msg.setPayload( contractId );
 
         return msg;
     }
+
+    @RequestMapping( "contract/del" )
+    public Msg delWord( @RequestBody Map<String,Object> params ) {
+        String contractId = (String) params.get( "contractId" );
+
+        // 1.从db中读取合同信息
+        Contract contract = contractService.fetch( contractId );
+
+        // 4.保存合同到数据库
+        contractService.removeContract( contract );
+
+        // 6.返回合同编号和预览地址
+        Msg msg = new Msg();
+        msg.setCode( 1 );
+        msg.setContent( "删除合同成功" );
+        msg.setPayload( contractId );
+
+        return msg;
+    }
+
+
 
     @RequestMapping( "contract/save" )
     public void saveWord() {
