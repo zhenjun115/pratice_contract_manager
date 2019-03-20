@@ -84,10 +84,12 @@ public class PurchaseContractController {
     public Msg fetchById(@RequestBody HashMap<String,Object> params) {
         String contractId = (String)params.get( "contractId" );
 
+        Contract contract = contractService.fetch( contractId );
+
         Msg msg = new Msg();
         msg.setCode( 1 );
         msg.setContent( "获取采购模版成功" );
-        msg.setPayload( null );
+        msg.setPayload( contract );
         return msg;
     }
 
