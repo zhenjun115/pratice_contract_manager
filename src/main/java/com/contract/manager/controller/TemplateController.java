@@ -36,11 +36,12 @@ public class TemplateController {
 		}
 
 		PageHelper.startPage( page.getPageIndex(), page.getPageSize() );
-		List<Template> templates = templateService.fetch( request );
+		List<Template> templateList = templateService.fetch( request );
 
 		TemplatePageResponse payload = new TemplatePageResponse();
+
+		payload.setTemplateList( templateList );
 		payload.setPage( page );
-		payload.setTemplates( templates );
 
 		Msg msg = new Msg();
 		msg.setCode( 1 );

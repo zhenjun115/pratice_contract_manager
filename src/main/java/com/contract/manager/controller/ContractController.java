@@ -36,10 +36,10 @@ public class ContractController {
         }
 
         PageHelper.startPage(page.getPageIndex(), page.getPageSize() );
-        List<Contract> contracts = contractService.query( request );
+        List<Contract> contractList = contractService.query( request );
 
         Map<String,Object> payload = new HashMap<String,Object>();
-        payload.put( "contracts", contracts );
+        payload.put( "contractList", contractList );
         payload.put( "page", page );
 
         Msg msg = new Msg();

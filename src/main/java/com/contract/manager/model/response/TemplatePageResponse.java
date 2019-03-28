@@ -13,5 +13,5 @@ import java.util.List;
 public class TemplatePageResponse {
 
     private Page page;
-    private List<Template> templates;
+    private List<Template> templateList;
 }
